@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Default Layout
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <!-- Bootstrap Icons - Works for both Luma and Hyva (loaded once globally) -->
+        <link src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css" src_type="url" rel="stylesheet"/>
+        <!-- Scoped Bootstrap Components - Only required elements for our module -->
+        <css src="Panth_ProductAttachments::css/bootstrap-scoped.css"/>
+        <!-- Module CSS loaded via _module.less on Luma (compiled into styles-m.css) -->
+        <!-- Hyva loads attachments.css via default_hyva.xml -->
+    </head>
+    <body>
+        <!-- Custom CSS Block - Loaded AFTER module CSS for easy overrides -->
+        <referenceContainer name="after.body.start">
+            <block class="Panth\ProductAttachments\Block\CustomCss" name="panth.productattachments.custom.css" template="Panth_ProductAttachments::custom-css.phtml" />
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,401 @@
+<?php
+/**
+ * Table View - Bootstrap Layout
+ */
+/** @var \Panth\ProductAttachments\Block\Attachment\Renderer $parentBlock */
+$parentBlock = $this->getData('parent_block');
+$attachments = $this->getData('attachments') ?: [];
+
+if (empty($attachments)) {
+    return '';
+}
+
+// Group: Links first, then files by type
+$links = [];
+$filesByType = [];
+
+foreach ($attachments as $attachment) {
+    if ($parentBlock->hasLink($attachment)) {
+        $links[] = ['attachment' => $attachment];
+    }
+    if ($parentBlock->hasFiles($attachment)) {
+        foreach ($attachment->getFiles() as $file) {
+            $ext = strtoupper(pathinfo($file->getOriginalFilename(), PATHINFO_EXTENSION));
+            $filesByType[$ext][] = ['attachment' => $attachment, 'file' => $file];
+        }
+    }
+}
+?>
+
+<div class="table-responsive">
+    <table class="table table-sm table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th style="width: 50px;"></th>
+                <th><?= $block->escapeHtml(__('Name')) ?></th>
+                <th style="width: 100px;"><?= $block->escapeHtml(__('Type')) ?></th>
+                <?php if ($parentBlock->showFileSize()): ?>
+                <th style="width: 100px;"><?= $block->escapeHtml(__('Size')) ?></th>
+                <?php endif; ?>
+                <th style="width: 120px;"><?= $block->escapeHtml(__('Action')) ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($links)): ?>
+            <?php foreach ($links as $item): ?>
+            <?php $attachment = $item['attachment']; ?>
+            <tr data-attachment-id="<?= (int)$attachment->getId() ?>" data-downloadable="1">
+                <td class="text-center" data-label="">
+                    <i class="bi bi-link-45deg pa-attachment-icon"></i>
+                </td>
+                <td data-label="Name">
+                    <strong class="d-block"><?= $block->escapeHtml($attachment->getTitle()) ?></strong>
+                    <small class="pa-filename"><?= $block->escapeHtml($attachment->getLinkUrl()) ?></small>
+                </td>
+                <td data-label="Type"><span class="badge bg-info">LINK</span></td>
+                <?php if ($parentBlock->showFileSize()): ?>
+                <td data-label="Size">-</td>
+                <?php endif; ?>
+                <td data-label="Action">
+                    <a href="<?= $block->escapeUrl($attachment->getLinkUrl()) ?>"
+                       class="btn btn-primary btn-sm"
+                       target="<?= $block->escapeHtmlAttr($attachment->getLinkTarget() ?: '_blank') ?>"
+                       title="<?= $block->escapeHtmlAttr(__('Open Link')) ?>">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            <?php endif; ?>
+
+            <?php if (!empty($filesByType)): ?>
+            <?php foreach ($filesByType as $type => $items): ?>
+            <?php foreach ($items as $item): ?>
+            <?php
+                $attachment = $item['attachment'];
+                $file = $item['file'];
+                $isDownloadable = $parentBlock->isDownloadable($attachment);
+                $fileSize = $file->getFileSize();
+
+                // Map file types to Bootstrap Icons
+                $iconMap = [
+                    // Documents
+                    'PDF' => 'bi-file-earmark-pdf',
+                    'DOC' => 'bi-file-earmark-word',
+                    'DOCX' => 'bi-file-earmark-word',
+                    'XLS' => 'bi-file-earmark-excel',
+                    'XLSX' => 'bi-file-earmark-excel',
+                    'PPT' => 'bi-file-earmark-ppt',
+                    'PPTX' => 'bi-file-earmark-ppt',
+                    'TXT' => 'bi-file-earmark-text',
+                    'RTF' => 'bi-file-earmark-richtext',
+                    'CSV' => 'bi-file-earmark-spreadsheet',
+
+                    // Archives
+                    'ZIP' => 'bi-file-earmark-zip',
+                    'RAR' => 'bi-file-earmark-zip',
+                    '7Z' => 'bi-file-earmark-zip',
+                    'TAR' => 'bi-file-earmark-zip',
+                    'GZ' => 'bi-file-earmark-zip',
+
+                    // Images
+                    'JPG' => 'bi-file-earmark-image',
+                    'JPEG' => 'bi-file-earmark-image',
+                    'PNG' => 'bi-file-earmark-image',
+                    'GIF' => 'bi-file-earmark-image',
+                    'BMP' => 'bi-file-earmark-image',
+                    'SVG' => 'bi-file-earmark-image',
+                    'WEBP' => 'bi-file-earmark-image',
+                    'ICO' => 'bi-file-earmark-image',
+
+                    // Videos
+                    'MP4' => 'bi-file-earmark-play',
+                    'AVI' => 'bi-file-earmark-play',
+                    'MOV' => 'bi-file-earmark-play',
+                    'WMV' => 'bi-file-earmark-play',
+                    'MKV' => 'bi-file-earmark-play',
+                    'FLV' => 'bi-file-earmark-play',
+                    'WEBM' => 'bi-file-earmark-play',
+                    'M4V' => 'bi-file-earmark-play',
+
+                    // Audio
+                    'MP3' => 'bi-file-earmark-music',
+                    'WAV' => 'bi-file-earmark-music',
+                    'AAC' => 'bi-file-earmark-music',
+                    'OGG' => 'bi-file-earmark-music',
+                    'M4A' => 'bi-file-earmark-music',
+                    'FLAC' => 'bi-file-earmark-music',
+                    'WMA' => 'bi-file-earmark-music',
+
+                    // Code
+                    'HTML' => 'bi-file-earmark-code',
+                    'CSS' => 'bi-file-earmark-code',
+                    'JS' => 'bi-file-earmark-code',
+                    'PHP' => 'bi-file-earmark-code',
+                    'PY' => 'bi-file-earmark-code',
+                    'JAVA' => 'bi-file-earmark-code',
+                    'CPP' => 'bi-file-earmark-code',
+                    'C' => 'bi-file-earmark-code',
+                    'JSON' => 'bi-file-earmark-code',
+                    'XML' => 'bi-file-earmark-code',
+
+                    // Binary
+                    'EXE' => 'bi-file-earmark-binary',
+                    'DLL' => 'bi-file-earmark-binary',
+                    'BIN' => 'bi-file-earmark-binary',
+                ];
+
+                // Get icon class - prioritize attachment type icon over file extension
+                $iconClass = $iconMap[$type] ?? 'bi-file-earmark';
+
+                // Get attachment type name and icon if available
+                $typeName = $type;
+                $typeId = $attachment->getAttachmentTypeId();
+                if ($typeId && method_exists($attachment, 'getType') && $attachment->getType()) {
+                    $typeName = $attachment->getType()->getName();
+                    // Prioritize attachment type icon if available
+                    if ($attachment->getType()->getIconClass()) {
+                        $iconClass = $attachment->getType()->getIconClass();
+                    }
+                }
+            ?>
+            <tr data-attachment-id="<?= (int)$attachment->getId() ?>"
+                data-file-id="<?= (int)$file->getFileId() ?>"
+                data-downloadable="<?= $isDownloadable ? '1' : '0' ?>">
+                <td class="text-center" data-label="">
+                    <i class="bi <?= $block->escapeHtmlAttr($iconClass) ?> pa-attachment-icon"></i>
+                </td>
+                <td data-label="Name">
+                    <strong class="d-block"><?= $block->escapeHtml($attachment->getTitle()) ?></strong>
+                    <small class="pa-filename"><?= $block->escapeHtml($file->getOriginalFilename()) ?></small>
+                </td>
+                <td data-label="Type"><span class="badge bg-secondary"><?= $block->escapeHtml($typeName) ?></span></td>
+                <?php if ($parentBlock->showFileSize()): ?>
+                <td data-label="Size"><small><?= $fileSize > 0 ? $block->escapeHtml($parentBlock->formatFileSize($fileSize)) : '-' ?></small></td>
+                <?php endif; ?>
+                <td data-label="Action">
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-info btn-sm pa-preview-btn"
+                                data-attachment-id="<?= (int)$attachment->getId() ?>"
+                                data-file-id="<?= (int)$file->getFileId() ?>"
+                                data-filename="<?= $block->escapeHtmlAttr($file->getOriginalFilename()) ?>"
+                                data-filetype="<?= $block->escapeHtmlAttr($type) ?>"
+                                data-downloadable="<?= $isDownloadable ? '1' : '0' ?>"
+                                title="<?= $block->escapeHtmlAttr(__('Preview')) ?>">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        <?php if ($isDownloadable): ?>
+                        <button class="btn btn-primary btn-sm pa-download-btn"
+                                data-attachment-id="<?= (int)$attachment->getId() ?>"
+                                data-file-id="<?= (int)$file->getFileId() ?>"
+                                title="<?= $block->escapeHtmlAttr(__('Download')) ?>">
+                            <i class="bi bi-download"></i>
+                        </button>
+                        <?php else: ?>
+                        <a href="<?= $block->escapeUrl($block->getUrl('customer/account/login')) ?>"
+                           class="btn btn-warning btn-sm pa-login-btn"
+                           data-post='{"action":"<?= $block->escapeUrl($block->getUrl('customer/account/loginPost')) ?>","data":{"context":"attachments"}}'
+                           title="<?= $block->escapeHtmlAttr(__('Login to Download')) ?>">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                        </a>
+                        <?php endif; ?>
+                    </div>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            <?php endforeach; ?>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Container for Table View -->
+<?php $contextPrefix = $parentBlock->getContextPrefix(); ?>
+<div id="pa-preview-modal-container-<?= $block->escapeHtmlAttr($contextPrefix) ?>table" style="display:none;">
+    <div id="pa-preview-modal-content-<?= $block->escapeHtmlAttr($contextPrefix) ?>table"></div>
+</div>
+
+<script>
+require(['jquery', 'Magento_Ui/js/modal/modal'], function($, modal) {
+    'use strict';
+
+    var contextPrefix = '<?= $block->escapeJs($contextPrefix) ?>';
+    var previewModalTable = null;
+    var containerId = '#panth-attachments-' + contextPrefix + '<?= $block->escapeJs($parentBlock->getViewMode()) ?>';
+
+    // Download button click handler - scoped to this widget only
+    $(document).on('click', containerId + ' .pa-download-btn', function(e) {
+        e.preventDefault();
+
+        var $btn = $(this);
+        var attachmentId = $btn.data('attachment-id');
+        var fileId = $btn.data('file-id');
+
+        if (!attachmentId) {
+            console.error('No attachment ID found');
+            return;
+        }
+
+        // Build download URL
+        var downloadUrl = '<?= $block->escapeUrl($block->getUrl('productattachments/download/file')) ?>';
+        downloadUrl += '?id=' + attachmentId;
+        if (fileId) {
+            downloadUrl += '&file_id=' + fileId;
+        }
+
+        // Trigger download
+        window.location.href = downloadUrl;
+    });
+
+    // Preview button click handler - scoped to this widget only
+    $(document).on('click', containerId + ' .pa-preview-btn', function(e) {
+        e.preventDefault();
+
+        var $btn = $(this);
+        var $row = $btn.closest('tr');
+        var attachmentId = $btn.data('attachment-id');
+        var fileId = $btn.data('file-id');
+        var filename = $btn.data('filename');
+        var filetype = $btn.data('filetype');
+        var isDownloadable = $btn.data('downloadable') === 1;
+
+        // Get additional info from row
+        var attachmentTitle = $row.find('strong').first().text();
+        var fileSize = $row.find('td[data-label="Size"] small').text() || 'N/A';
+        var typeBadge = $row.find('.badge').text() || filetype;
+
+        if (!attachmentId) {
+            console.error('No attachment ID found');
+            return;
+        }
+
+        // Build preview URL
+        var previewUrl = '<?= $block->escapeUrl($block->getUrl('productattachments/preview/file')) ?>';
+        previewUrl += '?id=' + attachmentId;
+        if (fileId) {
+            previewUrl += '&file_id=' + fileId;
+        }
+
+        // Show modal with all file information
+        openPreviewModal(previewUrl, filename, filetype, attachmentId, fileId, isDownloadable, {
+            title: attachmentTitle,
+            size: fileSize,
+            type: typeBadge
+        });
+    });
+
+    // Open preview modal
+    function openPreviewModal(previewUrl, filename, filetype, attachmentId, fileId, isDownloadable, fileInfo) {
+        fileInfo = fileInfo || {};
+        var previewableTypes = ['PDF', 'JPG', 'JPEG', 'PNG', 'GIF', 'SVG', 'WEBP', 'BMP'];
+        var content = '';
+
+        // File information header
+        var fileInfoHtml = '<div style="background: var(--pa-bg-hover, #f5f5f5); padding: 15px; margin-bottom: 15px; border-radius: 4px;">' +
+            '<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">' +
+            '<div>' +
+            '<h4 style="margin: 0 0 5px 0; color: var(--pa-text, #171717);">' + (fileInfo.title || filename) + '</h4>' +
+            '<p style="margin: 0; color: var(--pa-text-secondary, #525252); font-size: 14px;">' +
+            '<i class="bi bi-file-earmark"></i> ' + filename +
+            '</p>' +
+            '</div>' +
+            '<div style="text-align: right;">' +
+            '<span class="badge bg-secondary" style="display: inline-block; margin-bottom: 5px;">' + (fileInfo.type || filetype) + '</span><br>' +
+            '<small style="color: var(--pa-text-secondary, #525252);"><i class="bi bi-hdd"></i> ' + (fileInfo.size || 'Unknown size') + '</small>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+
+        content += fileInfoHtml;
+
+        // Build preview content based on file type
+        if (previewableTypes.indexOf(filetype.toUpperCase()) !== -1) {
+            if (filetype.toUpperCase() === 'PDF') {
+                content += '<div style="text-align: center; background: var(--pa-bg-hover, #f5f5f5); padding: 10px; border-radius: 4px;">' +
+                    '<iframe src="' + previewUrl + '" width="100%" height="600px" style="border: 1px solid var(--pa-border, #e5e5e5); border-radius: 4px;"></iframe>' +
+                    '</div>';
+            } else {
+                // Images
+                content += '<div style="text-align: center; background: var(--pa-bg-hover, #f5f5f5); padding: 20px; border-radius: 4px;">' +
+                    '<img src="' + previewUrl + '" alt="Preview" style="max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />' +
+                    '</div>';
+            }
+        } else {
+            // Non-previewable files
+            var icon = 'bi-file-earmark';
+            var fileTypeUpper = filetype.toUpperCase();
+
+            // Set specific icons for different file types
+            if (['DOC', 'DOCX'].indexOf(fileTypeUpper) !== -1) icon = 'bi-file-earmark-word';
+            else if (['XLS', 'XLSX'].indexOf(fileTypeUpper) !== -1) icon = 'bi-file-earmark-excel';
+            else if (['PPT', 'PPTX'].indexOf(fileTypeUpper) !== -1) icon = 'bi-file-earmark-ppt';
+            else if (['ZIP', 'RAR', '7Z'].indexOf(fileTypeUpper) !== -1) icon = 'bi-file-earmark-zip';
+            else if (['MP4', 'AVI', 'MOV'].indexOf(fileTypeUpper) !== -1) icon = 'bi-file-earmark-play';
+            else if (['MP3', 'WAV'].indexOf(fileTypeUpper) !== -1) icon = 'bi-file-earmark-music';
+            else if (['TXT', 'CSV'].indexOf(fileTypeUpper) !== -1) icon = 'bi-file-earmark-text';
+
+            content += '<div style="text-align: center; padding: 60px 40px; background: var(--pa-bg-hover, #f5f5f5); border-radius: 4px;">' +
+                '<i class="bi ' + icon + '" style="font-size: 80px; color: var(--pa-text-muted, #a3a3a3); margin-bottom: 20px;"></i>' +
+                '<h4 style="color: var(--pa-text-secondary, #525252); margin-bottom: 10px;">Preview Not Available</h4>' +
+                '<p style="color: var(--pa-text-muted, #a3a3a3); margin-bottom: 20px;">This file type (' + filetype.toUpperCase() + ') cannot be previewed in the browser.</p>' +
+                '<p style="color: var(--pa-text-muted, #a3a3a3);">Please download the file to view its contents.</p>' +
+                '</div>';
+        }
+
+        // Add action buttons
+        var actionsHtml = '<div style="text-align: center; padding: 20px; border-top: 1px solid var(--pa-border, #e5e5e5); margin-top: 20px;">';
+
+        if (isDownloadable) {
+            var downloadUrl = '<?= $block->escapeUrl($block->getUrl('productattachments/download/file')) ?>';
+            downloadUrl += '?id=' + attachmentId;
+            if (fileId) {
+                downloadUrl += '&file_id=' + fileId;
+            }
+            actionsHtml += '<button class="action primary" onclick="window.location.href=\'' + downloadUrl + '\'" style="margin-right: 10px;">' +
+                '<span><i class="bi bi-download"></i> Download File</span>' +
+                '</button>';
+        } else {
+            actionsHtml += '<button class="action secondary" disabled title="Login required to download">' +
+                '<span><i class="bi bi-lock"></i> Login Required</span>' +
+                '</button>';
+        }
+
+        actionsHtml += '</div>';
+        content += actionsHtml;
+
+        // Update content first
+        $('#pa-preview-modal-content-' + contextPrefix + 'table').html(content);
+
+        // Create modal if not exists
+        if (!previewModalTable) {
+            var modalOptions = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                title: false,
+                buttons: []
+            };
+
+            previewModalTable = modal(modalOptions, $('#pa-preview-modal-container-' + contextPrefix + 'table'));
+
+            // Add close button to modal after it's created
+            var $modalElement = $('#pa-preview-modal-container-' + contextPrefix + 'table');
+            if ($modalElement.find('.action-close').length === 0) {
+                $modalElement.find('.modal-inner-wrap').prepend(
+                    '<button class="action-close pa-modal-close-btn" type="button" aria-label="Close">' +
+                    '<span>Close</span>' +
+                    '</button>'
+                );
+
+                // Bind close button click event
+                $modalElement.on('click', '.action-close', function() {
+                    previewModalTable.closeModal();
+                });
+            }
+        }
+
+        // Open modal using the modal object
+        previewModalTable.openModal();
+    }
+});
+</script>

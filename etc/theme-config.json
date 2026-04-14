@@ -1,0 +1,11 @@
+{
+  "pa-primary": "#0D9488",
+  "pa-primary-dark": "#0F766E",
+  "pa-primary-light": "#F0FDFA",
+  "pa-bg": "#FFFFFF",
+  "pa-bg-hover": "#F9FAFB",
+  "pa-border": "#E5E7EB",
+  "pa-text": "#171717",
+  "pa-text-secondary": "#525252",
+  "pa-text-muted": "#A3A3A3"
+}

@@ -1,0 +1,154 @@
+<?php
+/**
+ * List View - Hyva Theme
+ * Same Bootstrap design as Luma, but with Alpine.js instead of RequireJS
+ */
+/** @var \Panth\ProductAttachments\Block\Attachment\Renderer $parentBlock */
+// Support both createBlock() and direct include() contexts
+if (!isset($parentBlock)) {
+    $parentBlock = $this->getData('parent_block');
+}
+if (!isset($attachmentsArray)) {
+    $attachmentsArray = $this->getData('attachments') ?: [];
+}
+$attachments = $attachmentsArray;
+
+if (empty($attachments)) {
+    return '';
+}
+
+// Group: Links first, then files by type
+$links = [];
+$filesByType = [];
+
+foreach ($attachments as $attachment) {
+    if ($parentBlock->hasLink($attachment)) {
+        $links[] = ['attachment' => $attachment];
+    }
+    if ($parentBlock->hasFiles($attachment)) {
+        foreach ($attachment->getFiles() as $file) {
+            $ext = strtoupper(pathinfo($file->getOriginalFilename(), PATHINFO_EXTENSION));
+            $filesByType[$ext][] = ['attachment' => $attachment, 'file' => $file];
+        }
+    }
+}
+
+// Map file types to Bootstrap Icons
+$iconMap = [
+    'PDF' => 'bi-file-earmark-pdf', 'DOC' => 'bi-file-earmark-word', 'DOCX' => 'bi-file-earmark-word',
+    'XLS' => 'bi-file-earmark-excel', 'XLSX' => 'bi-file-earmark-excel',
+    'PPT' => 'bi-file-earmark-ppt', 'PPTX' => 'bi-file-earmark-ppt',
+    'TXT' => 'bi-file-earmark-text', 'RTF' => 'bi-file-earmark-richtext', 'CSV' => 'bi-file-earmark-spreadsheet',
+    'ZIP' => 'bi-file-earmark-zip', 'RAR' => 'bi-file-earmark-zip', '7Z' => 'bi-file-earmark-zip',
+    'JPG' => 'bi-file-earmark-image', 'JPEG' => 'bi-file-earmark-image', 'PNG' => 'bi-file-earmark-image',
+    'GIF' => 'bi-file-earmark-image', 'BMP' => 'bi-file-earmark-image', 'SVG' => 'bi-file-earmark-image',
+    'MP4' => 'bi-file-earmark-play', 'AVI' => 'bi-file-earmark-play', 'MOV' => 'bi-file-earmark-play',
+    'MP3' => 'bi-file-earmark-music', 'WAV' => 'bi-file-earmark-music',
+    'HTML' => 'bi-file-earmark-code', 'CSS' => 'bi-file-earmark-code', 'JS' => 'bi-file-earmark-code',
+    'EXE' => 'bi-file-earmark-binary', 'DLL' => 'bi-file-earmark-binary', 'BIN' => 'bi-file-earmark-binary',
+];
+?>
+
+<div class="list-group list-group-flush">
+    <?php if (!empty($links)): ?>
+    <?php foreach ($links as $item): ?>
+    <?php $attachment = $item['attachment']; ?>
+    <div class="list-group-item d-flex gap-3 align-items-center"
+         data-attachment-id="<?= (int)$attachment->getId() ?>"
+         data-downloadable="1">
+        <div class="pa-list-icon">
+            <i class="bi bi-link-45deg"></i>
+        </div>
+        <div class="flex-grow-1">
+            <strong class="d-block mb-1"><?= $block->escapeHtml($attachment->getTitle()) ?></strong>
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+                <span class="badge bg-info pa-type-badge">LINK</span>
+                <small class="pa-filename"><?= $block->escapeHtml($attachment->getLinkUrl()) ?></small>
+            </div>
+        </div>
+        <a href="<?= $block->escapeUrl($attachment->getLinkUrl()) ?>"
+           class="btn btn-primary btn-sm"
+           target="<?= $block->escapeHtmlAttr($attachment->getLinkTarget() ?: '_blank') ?>"
+           title="<?= $block->escapeHtmlAttr(__('Open Link')) ?>">
+            <i class="bi bi-box-arrow-up-right"></i>
+        </a>
+    </div>
+    <?php endforeach; ?>
+    <?php endif; ?>
+
+    <?php if (!empty($filesByType)): ?>
+    <?php foreach ($filesByType as $type => $items): ?>
+    <?php foreach ($items as $item): ?>
+    <?php
+        $attachment = $item['attachment'];
+        $file = $item['file'];
+        $isDownloadable = $parentBlock->isDownloadable($attachment);
+        $fileSize = $file->getFileSize();
+
+        // Get icon class
+        $iconClass = $iconMap[$type] ?? 'bi-file-earmark';
+
+        // Get attachment type name if available
+        $typeName = $type;
+        $typeId = $attachment->getAttachmentTypeId();
+        if ($typeId && method_exists($attachment, 'getType') && $attachment->getType()) {
+            $typeName = $attachment->getType()->getName();
+            if ($attachment->getType()->getIconClass()) {
+                $iconClass = $attachment->getType()->getIconClass();
+            }
+        }
+    ?>
+    <div class="list-group-item d-flex gap-3 align-items-center"
+         data-attachment-id="<?= (int)$attachment->getId() ?>"
+         data-file-id="<?= (int)$file->getFileId() ?>"
+         data-downloadable="<?= $isDownloadable ? '1' : '0' ?>">
+        <div class="pa-list-icon">
+            <i class="<?= $block->escapeHtmlAttr($iconClass) ?>"></i>
+        </div>
+        <div class="flex-grow-1 min-w-0">
+            <strong class="d-block mb-1"><?= $block->escapeHtml($attachment->getTitle()) ?></strong>
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+                <span class="badge bg-secondary pa-type-badge"><?= $block->escapeHtml($typeName) ?></span>
+                <small class="pa-filename"><?= $block->escapeHtml($file->getOriginalFilename()) ?></small>
+                <?php if ($fileSize > 0 && $parentBlock->showFileSize()): ?>
+                <small class="text-muted">• <?= $block->escapeHtml($parentBlock->formatFileSize($fileSize)) ?></small>
+                <?php endif; ?>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-info btn-sm pa-preview-btn"
+                    @click="openPreview(
+                        '<?= $block->escapeUrl($block->getUrl('productattachments/preview/file')) ?>?id=<?= (int)$attachment->getId() ?>&file_id=<?= (int)$file->getFileId() ?>',
+                        '<?= $block->escapeJs($file->getOriginalFilename()) ?>',
+                        '<?= $block->escapeJs($typeName) ?>',
+                        <?= (int)$attachment->getId() ?>,
+                        <?= (int)$file->getFileId() ?>,
+                        <?= $isDownloadable ? 'true' : 'false' ?>,
+                        {
+                            title: '<?= $block->escapeJs($attachment->getTitle()) ?>',
+                            size: '<?= $fileSize > 0 ? $block->escapeJs($parentBlock->formatFileSize($fileSize)) : 'N/A' ?>',
+                            type: '<?= $block->escapeJs($typeName) ?>'
+                        }
+                    )"
+                    title="<?= $block->escapeHtmlAttr(__('Preview')) ?>">
+                <i class="bi bi-eye"></i>
+            </button>
+            <?php if ($isDownloadable): ?>
+            <a href="<?= $block->escapeUrl($block->getUrl('productattachments/download/file')) ?>?id=<?= (int)$attachment->getId() ?>&file_id=<?= (int)$file->getFileId() ?>"
+               class="btn btn-primary btn-sm pa-download-btn"
+               title="<?= $block->escapeHtmlAttr(__('Download')) ?>">
+                <i class="bi bi-download"></i>
+            </a>
+            <?php else: ?>
+            <a href="<?= $block->escapeUrl($block->getUrl('customer/account/login')) ?>"
+               class="btn btn-warning btn-sm pa-login-btn"
+               title="<?= $block->escapeHtmlAttr(__('Login to Download')) ?>">
+                <i class="bi bi-box-arrow-in-right"></i>
+            </a>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endforeach; ?>
+    <?php endforeach; ?>
+    <?php endif; ?>
+</div>

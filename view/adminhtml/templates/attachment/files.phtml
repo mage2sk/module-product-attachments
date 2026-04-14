@@ -1,0 +1,839 @@
+<?php
+/**
+ * Files Upload Template
+ *
+ * @var $block \Panth\ProductAttachments\Block\Adminhtml\Attachment\Edit\Tab\Files
+ */
+
+$existingFiles = $block->getExistingFiles();
+$attachmentId = $block->getRequest()->getParam('attachment_id');
+?>
+
+<div class="attachment-files-manager">
+    <!-- Upload Section -->
+    <div class="files-upload-section">
+        <div class="admin__field">
+            <label class="admin__field-label">
+                <span><?= $block->escapeHtml(__('Upload Files')) ?></span>
+            </label>
+            <div class="admin__field-control">
+                <div class="file-uploader-area">
+                    <input type="file"
+                           id="attachment-files-input"
+                           name="files[]"
+                           multiple
+                           accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar,.jpg,.jpeg,.png,.gif,.svg"
+                           class="admin__control-file" />
+                    <label for="attachment-files-input" class="file-uploader-button">
+                        <span class="admin__control-text"><?= $block->escapeHtml(__('Click or Drag & Drop to Upload Files')) ?></span>
+                    </label>
+                </div>
+                <div class="admin__field-note">
+                    <?= $block->escapeHtml(__('Files will be uploaded automatically')) ?><br>
+                    <?= $block->escapeHtml(__('Allowed file types: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, ZIP, RAR, JPG, PNG, GIF, SVG')) ?><br>
+                    <?= $block->escapeHtml(__('Maximum file size: 50MB per file')) ?>
+                </div>
+                <div id="upload-status" class="upload-status" style="display: none;">
+                    <div class="upload-progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="upload-message"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Files Preview (files uploaded but not yet saved) -->
+    <div id="pending-files-section" class="files-list-section" style="display: none;">
+        <h3><?= $block->escapeHtml(__('Pending Files (Click Save to Complete)')) ?></h3>
+        <div class="admin__data-grid-wrap">
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('File Name')) ?></th>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Type')) ?></th>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Size')) ?></th>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Status')) ?></th>
+                        <th class="data-grid-th _actions"><?= $block->escapeHtml(__('Actions')) ?></th>
+                    </tr>
+                </thead>
+                <tbody id="pending-files-tbody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Existing Files Section -->
+    <?php if ($attachmentId && !empty($existingFiles)): ?>
+    <div class="files-list-section">
+        <h3><?= $block->escapeHtml(__('Uploaded Files')) ?></h3>
+        <div class="admin__data-grid-wrap">
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Primary')) ?></th>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('File Name')) ?></th>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Type')) ?></th>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Size')) ?></th>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Downloads')) ?></th>
+                        <th class="data-grid-th"><?= $block->escapeHtml(__('Uploaded')) ?></th>
+                        <th class="data-grid-th _actions"><?= $block->escapeHtml(__('Actions')) ?></th>
+                    </tr>
+                </thead>
+                <tbody id="existing-files-tbody">
+                    <?php foreach ($existingFiles as $file): ?>
+                    <tr data-file-id="<?= (int)$file['file_id'] ?>">
+                        <td class="data-grid-td">
+                            <input type="radio"
+                                   name="primary_file"
+                                   value="<?= (int)$file['file_id'] ?>"
+                                   <?= $file['is_primary'] ? 'checked' : '' ?>
+                                   class="primary-radio"
+                                   data-file-id="<?= (int)$file['file_id'] ?>" />
+                        </td>
+                        <td class="data-grid-td">
+                            <span class="file-icon file-icon-<?= $block->escapeHtmlAttr($file['file_extension']) ?>"></span>
+                            <?= $block->escapeHtml($file['original_filename']) ?>
+                        </td>
+                        <td class="data-grid-td"><?= $block->escapeHtml(strtoupper($file['file_extension'])) ?></td>
+                        <td class="data-grid-td"><?= $block->escapeHtml($file['formatted_size']) ?></td>
+                        <td class="data-grid-td"><?= (int)$file['download_count'] ?></td>
+                        <td class="data-grid-td"><?= $block->escapeHtml(date('Y-m-d H:i', strtotime($file['created_at']))) ?></td>
+                        <td class="data-grid-td _actions">
+                            <a href="<?= $block->escapeUrl($block->getDownloadUrl($file['file_id'])) ?>"
+                               class="action-download"
+                               title="<?= $block->escapeHtmlAttr(__('Download File')) ?>">
+                                <span><?= $block->escapeHtml(__('Download')) ?></span>
+                            </a>
+                            <button type="button"
+                                    class="action-delete"
+                                    data-file-id="<?= (int)$file['file_id'] ?>"
+                                    title="<?= $block->escapeHtmlAttr(__('Delete File')) ?>">
+                                <span><?= $block->escapeHtml(__('Delete')) ?></span>
+                            </button>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php elseif ($attachmentId): ?>
+    <div class="files-list-section">
+        <div class="message message-notice">
+            <?= $block->escapeHtml(__('No files uploaded yet. Use the upload section above to add files.')) ?>
+        </div>
+    </div>
+    <?php endif; ?>
+</div>
+
+<style>
+.attachment-files-manager {
+    padding: 20px 0;
+}
+
+.files-upload-section {
+    background: #f8f8f8;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 30px;
+}
+
+.file-uploader-area {
+    position: relative;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    padding: 30px;
+    text-align: center;
+    background: #fff;
+    transition: all 0.3s;
+}
+
+.file-uploader-area:hover {
+    border-color: #eb5202;
+    background: #f0f7fc;
+}
+
+.file-uploader-area.drag-over {
+    border-color: #eb5202;
+    background: #e6f2fa;
+}
+
+#attachment-files-input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+.file-uploader-button {
+    display: inline-block;
+    padding: 15px 30px;
+    background: #eb5202;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.file-uploader-button:hover {
+    background: #c44400;
+}
+
+
+.files-list-section {
+    margin-top: 30px;
+}
+
+.files-list-section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.data-grid {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-grid-th {
+    background: #f0f0f0;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #ddd;
+}
+
+.data-grid-td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.file-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.primary-radio {
+    cursor: pointer;
+}
+
+.action-download {
+    background: #eb5202;
+    color: #fff;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.action-download:hover {
+    background: #c44400;
+    color: #fff;
+}
+
+.action-delete {
+    background: #e22626;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.action-delete:hover {
+    background: #c00;
+}
+
+.message-notice {
+    padding: 15px;
+    background: #fef7e4;
+    border-left: 4px solid #ff9800;
+    color: #666;
+}
+
+.upload-status {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f8f8f8;
+    border-radius: 4px;
+}
+
+.upload-progress {
+    width: 100%;
+    height: 30px;
+    background: #e0e0e0;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #eb5202, #c44400);
+    transition: width 0.3s ease;
+    border-radius: 15px;
+}
+
+.upload-message {
+    font-size: 14px;
+    color: #333;
+}
+
+.upload-message.success {
+    color: #3c763d;
+    font-weight: bold;
+}
+
+.upload-message.error {
+    color: #a94442;
+    font-weight: bold;
+}
+
+.upload-message.info {
+    color: #31708f;
+    font-weight: bold;
+}
+
+#pending-files-section {
+    background: #fffbf0;
+    padding: 20px;
+    border-radius: 4px;
+    border: 2px solid #ff9800;
+}
+
+#pending-files-section h3 {
+    color: #ff6f00;
+    margin: 0 0 15px 0;
+}
+
+#pending-files-tbody .pending-file-row {
+    background: #fff;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-badge.pending {
+    background: #fef7e4;
+    color: #ff9800;
+    border: 1px solid #ff9800;
+}
+
+.action-remove-pending {
+    background: #e22626;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.action-remove-pending:hover {
+    background: #c00;
+}
+</style>
+
+<script>
+require([
+    'jquery',
+    'Magento_Ui/js/modal/confirm',
+    'mage/translate',
+    'uiRegistry',
+    'domReady!'
+], function($, confirmation, $t, uiRegistry) {
+    'use strict';
+
+    var fileInput = $('#attachment-files-input');
+    var uploaderArea = $('.file-uploader-area');
+    var attachmentId = <?= (int)$attachmentId ?: 0 ?>;
+    var tempFiles = []; // Store temporarily uploaded file hashes
+
+    // Clear file input on page load to prevent re-uploads
+    console.log('Clearing file input on page load');
+    fileInput.val('');
+
+    // File selection handler - upload to temp for all attachments
+    fileInput.on('change', function(e) {
+        console.log('=== FILE INPUT CHANGE EVENT TRIGGERED ===');
+        console.log('Event:', e);
+        console.log('Files selected:', e.target.files);
+
+        if (e.target.files && e.target.files.length > 0) {
+            console.log('Files found, starting validation...');
+            // Validate files before proceeding
+            var validationResult = validateFiles(e.target.files);
+            console.log('Validation result:', validationResult);
+            if (!validationResult.valid) {
+                showUploadStatus(validationResult.message, 'error');
+                $(this).val('');
+                return;
+            }
+
+            // Upload to temporary storage
+            var input = this;
+            uploadToTemp(e.target.files, function(success, uploadedFiles) {
+                if (success) {
+                    // Store temp file info
+                    tempFiles = tempFiles.concat(uploadedFiles);
+
+                    if (!attachmentId) {
+                        // New attachment - show preview of pending files
+                        addPendingFilesToPreview(uploadedFiles);
+                        showUploadStatus(
+                            $t('%1 file(s) uploaded successfully. Click Save to complete.').replace('%1', uploadedFiles.length),
+                            'success'
+                        );
+                        // Add temp file hashes to hidden input for form submission
+                        updateTempFilesInput();
+                    } else {
+                        // Existing attachment - move from temp to permanent
+                        moveTempToPermanent(uploadedFiles);
+                    }
+                }
+                // Clear the input
+                $(input).val('');
+            });
+        }
+    });
+
+    // Update temp file hashes in UI Component form data
+    function updateTempFilesInput() {
+        console.log('Updating temp_file_hashes with:', tempFiles);
+
+        // Access the UI Component form
+        var provider = uiRegistry.get('attachment_form.attachment_form_data_source');
+
+        if (provider) {
+            console.log('Found form data provider');
+            // Set the temp_file_hashes in the form data
+            provider.set('data.temp_file_hashes', JSON.stringify(tempFiles));
+            console.log('temp_file_hashes set in form data:', provider.get('data.temp_file_hashes'));
+        } else {
+            console.error('Form data provider not found');
+
+            // Fallback: try to add as hidden input
+            var form = $('form[data-role="edit-form"]');
+            if (!form.length) {
+                form = $('form').first();
+            }
+
+            var input = form.find('input[name="temp_file_hashes"]');
+            if (!input.length) {
+                input = $('<input>').attr({
+                    type: 'hidden',
+                    name: 'temp_file_hashes'
+                });
+                form.prepend(input);
+            }
+            input.val(JSON.stringify(tempFiles));
+            console.log('Fallback: added as hidden input');
+        }
+    }
+
+    // Drag and drop handlers
+    uploaderArea.on('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).addClass('drag-over');
+    });
+
+    uploaderArea.on('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).removeClass('drag-over');
+    });
+
+    uploaderArea.on('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).removeClass('drag-over');
+
+        var files = e.originalEvent.dataTransfer.files;
+
+        // Validate files before proceeding
+        var validationResult = validateFiles(files);
+        if (!validationResult.valid) {
+            showUploadStatus(validationResult.message, 'error');
+            return;
+        }
+
+        // Upload to temp storage
+        if (files && files.length > 0) {
+            uploadToTemp(files, function(success, uploadedFiles) {
+                if (success) {
+                    tempFiles = tempFiles.concat(uploadedFiles);
+
+                    if (!attachmentId) {
+                        // New attachment - show preview of pending files
+                        addPendingFilesToPreview(uploadedFiles);
+                        showUploadStatus(
+                            $t('%1 file(s) uploaded successfully. Click Save to complete.').replace('%1', uploadedFiles.length),
+                            'success'
+                        );
+                        updateTempFilesInput();
+                    } else {
+                        // Existing attachment - move from temp to permanent
+                        moveTempToPermanent(uploadedFiles);
+                    }
+                }
+            });
+        }
+    });
+
+    // Delete file
+    $(document).on('click', '.action-delete', function() {
+        var fileId = $(this).data('file-id');
+        var row = $(this).closest('tr');
+
+        confirmation({
+            title: $t('Delete File'),
+            content: $t('Are you sure you want to delete this file?'),
+            actions: {
+                confirm: function() {
+                    $.ajax({
+                        url: '<?= $block->escapeUrl($block->getDeleteFileUrl()) ?>',
+                        type: 'POST',
+                        data: {
+                            file_id: fileId,
+                            form_key: window.FORM_KEY
+                        },
+                        showLoader: true,
+                        success: function(response) {
+                            if (response.success) {
+                                row.fadeOut(300, function() {
+                                    $(this).remove();
+                                });
+                            } else {
+                                alert(response.message || $t('Delete failed'));
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+    // Set primary file
+    $(document).on('change', '.primary-radio', function() {
+        var fileId = $(this).data('file-id');
+
+        $.ajax({
+            url: '<?= $block->escapeUrl($block->getSetPrimaryUrl()) ?>',
+            type: 'POST',
+            data: {
+                file_id: fileId,
+                attachment_id: attachmentId,
+                form_key: window.FORM_KEY
+            },
+            showLoader: true,
+            success: function(response) {
+                if (!response.success) {
+                    alert(response.message || $t('Failed to set primary file'));
+                    location.reload();
+                }
+            }
+        });
+    });
+
+    // Validate files
+    function validateFiles(files) {
+        var allowedExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'zip', 'rar', 'jpg', 'jpeg', 'png', 'gif', 'svg'];
+        var maxFileSize = 50 * 1024 * 1024; // 50MB in bytes
+        var invalidFiles = [];
+        var oversizedFiles = [];
+
+        Array.from(files).forEach(function(file) {
+            var extension = file.name.split('.').pop().toLowerCase();
+
+            if (!allowedExtensions.includes(extension)) {
+                invalidFiles.push(file.name + ' (.' + extension + ')');
+            }
+
+            if (file.size > maxFileSize) {
+                oversizedFiles.push(file.name + ' (' + formatFileSize(file.size) + ')');
+            }
+        });
+
+        if (invalidFiles.length > 0) {
+            return {
+                valid: false,
+                message: $t('Invalid file type(s): ') + invalidFiles.join(', ') + '. ' +
+                         $t('Allowed types: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, ZIP, RAR, JPG, PNG, GIF, SVG')
+            };
+        }
+
+        if (oversizedFiles.length > 0) {
+            return {
+                valid: false,
+                message: $t('File(s) too large: ') + oversizedFiles.join(', ') + '. ' +
+                         $t('Maximum file size is 50MB')
+            };
+        }
+
+        return { valid: true };
+    }
+
+    // Format file size for display
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        var k = 1024;
+        var sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        var i = Math.floor(Math.log(bytes) / Math.log(k));
+        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    }
+
+    // Show upload status
+    function showUploadStatus(message, type) {
+        var statusDiv = $('#upload-status');
+        var messageDiv = statusDiv.find('.upload-message');
+        var progressBar = statusDiv.find('.progress-bar');
+
+        messageDiv.removeClass('success error info').addClass(type);
+        messageDiv.text(message);
+        statusDiv.show();
+
+        if (type === 'error') {
+            progressBar.css('width', '100%');
+            progressBar.css('background', '#a94442');
+        } else if (type === 'success') {
+            progressBar.css('width', '100%');
+            progressBar.css('background', 'linear-gradient(90deg, #3c763d, #2e5d2d)');
+        } else if (type === 'info') {
+            // Info messages (file selected, waiting for save) - show full bar in blue
+            progressBar.css('width', '100%');
+            progressBar.css('background', 'linear-gradient(90deg, #5bc0de, #31b0d5)');
+        } else {
+            // Uploading state - will be updated by progress event
+            progressBar.css('width', '0%');
+            progressBar.css('background', 'linear-gradient(90deg, #eb5202, #c44400)');
+        }
+
+        // Auto-hide after 10 seconds for success/error/info messages
+        if (type === 'success' || type === 'error' || type === 'info') {
+            setTimeout(function() {
+                statusDiv.fadeOut();
+            }, 10000);
+        }
+    }
+
+    // Upload files to temporary storage
+    function uploadToTemp(files, callback) {
+        if (files.length === 0) {
+            console.error('uploadToTemp: No files provided');
+            if (callback) callback(false, []);
+            return;
+        }
+
+        var fileCount = files.length;
+        var fileNames = Array.from(files).map(function(f) { return f.name; }).join(', ');
+
+        console.log('=== UPLOAD TO TEMP STARTED ===');
+        console.log('File count:', fileCount);
+        console.log('File names:', fileNames);
+        console.log('Files object:', files);
+
+        showUploadStatus(
+            $t('Uploading %1 file(s) to temporary storage...').replace('%1', fileCount),
+            'uploading'
+        );
+
+        var formData = new FormData();
+        formData.append('form_key', window.FORM_KEY);
+
+        // Append files with detailed logging
+        // Use indexed keys for proper multiple file upload
+        Array.from(files).forEach(function(file, index) {
+            console.log('Appending file ' + index + ':', {
+                name: file.name,
+                size: file.size,
+                type: file.type
+            });
+            formData.append('files[' + index + ']', file);
+        });
+
+        // Log FormData contents
+        console.log('FormData entries:');
+        for (var pair of formData.entries()) {
+            if (pair[1] instanceof File) {
+                console.log(pair[0] + ': File(' + pair[1].name + ', ' + pair[1].size + ' bytes)');
+            } else {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+        }
+
+        var uploadUrl = '<?= $block->escapeUrl($block->getUrl('productattachments/attachment/tempUpload')) ?>';
+        console.log('Upload URL:', uploadUrl);
+
+        $.ajax({
+            url: uploadUrl,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener('progress', function(e) {
+                    if (e.lengthComputable) {
+                        var percentComplete = (e.loaded / e.total) * 100;
+                        console.log('Upload progress:', percentComplete.toFixed(2) + '%');
+                        $('#upload-status .progress-bar').css('width', percentComplete + '%');
+                    }
+                }, false);
+                return xhr;
+            },
+            beforeSend: function(xhr, settings) {
+                console.log('AJAX beforeSend:', {
+                    url: settings.url,
+                    type: settings.type,
+                    processData: settings.processData,
+                    contentType: settings.contentType
+                });
+                $('#upload-status .progress-bar').css('width', '0%');
+            },
+            success: function(response) {
+                console.log('=== UPLOAD SUCCESS ===');
+                console.log('Response:', response);
+                if (response.success) {
+                    showUploadStatus(response.message, 'success');
+                    if (callback) callback(true, response.files || []);
+                } else {
+                    console.error('Upload failed:', response.message);
+                    showUploadStatus(response.message || $t('Upload failed'), 'error');
+                    if (callback) callback(false, []);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('=== UPLOAD ERROR ===');
+                console.error('XHR:', xhr);
+                console.error('Status:', status);
+                console.error('Error:', error);
+                console.error('Response Text:', xhr.responseText);
+
+                var errorMessage = $t('Upload failed. ');
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage += xhr.responseJSON.message;
+                } else if (xhr.responseText) {
+                    errorMessage += xhr.responseText.substring(0, 200);
+                } else {
+                    errorMessage += $t('Please try again.');
+                }
+                showUploadStatus(errorMessage, 'error');
+                if (callback) callback(false, []);
+            }
+        });
+    }
+
+    // Move temp files to permanent storage
+    function moveTempToPermanent(uploadedFiles) {
+        showUploadStatus($t('Moving files to permanent storage...'), 'info');
+
+        $.ajax({
+            url: '<?= $block->escapeUrl($block->getUrl('productattachments/attachment/moveTempFiles')) ?>',
+            type: 'POST',
+            data: {
+                attachment_id: attachmentId,
+                temp_files: JSON.stringify(uploadedFiles),
+                form_key: window.FORM_KEY
+            },
+            success: function(response) {
+                if (response.success) {
+                    showUploadStatus($t('Files saved successfully! Reloading...'), 'success');
+                    setTimeout(function() {
+                        window.location.reload(true);
+                    }, 800);
+                } else {
+                    showUploadStatus(response.message || $t('Failed to save files'), 'error');
+                }
+            },
+            error: function() {
+                showUploadStatus($t('Failed to save files. Please try again.'), 'error');
+            }
+        });
+    }
+
+    // Add pending files to preview table
+    function addPendingFilesToPreview(uploadedFiles) {
+        console.log('Adding files to preview:', uploadedFiles);
+        var tbody = $('#pending-files-tbody');
+
+        uploadedFiles.forEach(function(file) {
+            var row = $('<tr>').addClass('pending-file-row').attr('data-hash', file.hash);
+
+            // File name column with icon
+            var fileIcon = '<span class="file-icon file-icon-' + file.extension + '"></span>';
+            row.append($('<td>').addClass('data-grid-td').html(fileIcon + file.original_name));
+
+            // Type column
+            row.append($('<td>').addClass('data-grid-td').text(file.extension.toUpperCase()));
+
+            // Size column
+            row.append($('<td>').addClass('data-grid-td').text(formatFileSize(file.size)));
+
+            // Status column
+            row.append($('<td>').addClass('data-grid-td').html('<span class="status-badge pending">Pending Save</span>'));
+
+            // Actions column
+            var actionsCell = $('<td>').addClass('data-grid-td _actions');
+            var removeBtn = $('<button>')
+                .attr('type', 'button')
+                .addClass('action-remove-pending')
+                .attr('data-hash', file.hash)
+                .attr('title', $t('Remove File'))
+                .html('<span>' + $t('Remove') + '</span>');
+            actionsCell.append(removeBtn);
+            row.append(actionsCell);
+
+            tbody.append(row);
+        });
+
+        // Show the pending files section
+        $('#pending-files-section').show();
+
+        console.log('Preview updated. Total pending files:', tempFiles.length);
+    }
+
+    // Remove pending file from preview
+    $(document).on('click', '.action-remove-pending', function() {
+        var hash = $(this).data('hash');
+        var row = $(this).closest('tr');
+
+        console.log('Removing pending file with hash:', hash);
+
+        // Remove from tempFiles array
+        tempFiles = tempFiles.filter(function(file) {
+            return file.hash !== hash;
+        });
+
+        // Update hidden input
+        updateTempFilesInput();
+
+        // Remove row with animation
+        row.fadeOut(300, function() {
+            $(this).remove();
+
+            // Hide section if no more pending files
+            if (tempFiles.length === 0) {
+                $('#pending-files-section').fadeOut();
+            }
+        });
+
+        showUploadStatus($t('File removed from pending list'), 'info');
+        console.log('Remaining pending files:', tempFiles.length);
+    });
+});
+</script>

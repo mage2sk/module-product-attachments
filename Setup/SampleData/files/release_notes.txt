@@ -1,0 +1,6 @@
+Release Notes v2.0
+==================
+
+- New feature: Enhanced performance
+- Bug fix: Resolved checkout issue
+- Improvement: Better mobile experience

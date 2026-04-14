@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Attachment Pages Grid Layout
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/layout_generic.xsd">
+    <container name="root">
+        <block class="Panth\ProductAttachments\Block\Adminhtml\Attachment\Edit\Tab\Page" name="attachment.edit.tab.pages"/>
+    </container>
+</layout>

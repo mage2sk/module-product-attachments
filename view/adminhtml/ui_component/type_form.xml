@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Type Form UI Component
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">type_form.type_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Attachment Type Information</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="back" class="Panth\ProductAttachments\Block\Adminhtml\Type\Edit\BackButton"/>
+            <button name="delete" class="Panth\ProductAttachments\Block\Adminhtml\Type\Edit\DeleteButton"/>
+            <button name="save" class="Panth\ProductAttachments\Block\Adminhtml\Type\Edit\SaveButton"/>
+            <button name="save_and_continue" class="Panth\ProductAttachments\Block\Adminhtml\Type\Edit\SaveAndContinueButton"/>
+        </buttons>
+        <namespace>type_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>type_form.type_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="type_form_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="productattachments/type/save"/>
+        </settings>
+        <dataProvider class="Panth\ProductAttachments\Ui\Component\DataProvider\TypeDataProvider" name="type_form_data_source">
+            <settings>
+                <requestFieldName>type_id</requestFieldName>
+                <primaryFieldName>type_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <!-- General Information Fieldset -->
+    <fieldset name="general">
+        <settings>
+            <label translate="true">General Information</label>
+            <opened>true</opened>
+        </settings>
+        <field name="type_id" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">type</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <visible>false</visible>
+                <dataScope>type_id</dataScope>
+            </settings>
+        </field>
+        <field name="is_active" sortOrder="5" formElement="checkbox">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">type</item>
+                    <item name="default" xsi:type="number">1</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>boolean</dataType>
+                <label translate="true">Enable Type</label>
+                <dataScope>is_active</dataScope>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <valueMap>
+                            <map name="false" xsi:type="number">0</map>
+                            <map name="true" xsi:type="number">1</map>
+                        </valueMap>
+                        <prefer>toggle</prefer>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="name" sortOrder="10" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">type</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>text</dataType>
+                <label translate="true">Name</label>
+                <dataScope>name</dataScope>
+            </settings>
+        </field>
+        <field name="code" sortOrder="20" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">type</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>text</dataType>
+                <label translate="true">Code</label>
+                <dataScope>code</dataScope>
+                <notice translate="true">Unique identifier for this type (lowercase, no spaces)</notice>
+            </settings>
+        </field>
+        <field name="icon_class" sortOrder="30" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">type</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Icon Class</label>
+                <dataScope>icon_class</dataScope>
+                <notice translate="true">Enter Bootstrap Icon class name (e.g., bi-file-earmark-pdf, bi-file-earmark-image, bi-file-earmark-play). Browse icons at: https://icons.getbootstrap.com/</notice>
+                <tooltip>
+                    <link>https://icons.getbootstrap.com/</link>
+                    <description translate="true">Use Bootstrap Icons for consistent styling. Search for file-related icons (bi-file-earmark-*) for best results. Common examples: bi-file-earmark-pdf (PDF files), bi-file-earmark-image (images), bi-file-earmark-play (videos), bi-file-earmark-music (audio), bi-file-earmark-code (code files)</description>
+                </tooltip>
+            </settings>
+        </field>
+        <field name="stores" sortOrder="45" formElement="multiselect">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">type</item>
+                    <item name="default" xsi:type="number">0</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>int</dataType>
+                <label translate="true">Store View</label>
+                <dataScope>stores</dataScope>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="Magento\Store\Ui\Component\Listing\Column\Store\Options"/>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+        <field name="sort_order" sortOrder="50" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">type</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="validate-zero-or-greater" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>text</dataType>
+                <label translate="true">Sort Order</label>
+                <dataScope>sort_order</dataScope>
+            </settings>
+        </field>
+    </fieldset>
+</form>

@@ -1,0 +1,717 @@
+<?php
+/**
+ * File Manager Modal Template
+ *
+ * @var \Panth\ProductAttachments\Block\Adminhtml\Attachment\FileManager $block
+ */
+$attachment = $block->getAttachment();
+$files = $block->getFiles();
+?>
+
+<div class="file-manager-modal-content" data-attachment-id="<?= (int)$attachment->getAttachmentId() ?>">
+    <?php if ($attachment): ?>
+        <div class="fm-header">
+            <h2><?= $block->escapeHtml($attachment->getTitle()) ?></h2>
+            <p class="fm-info">
+                <strong>ID:</strong> #<?= (int)$attachment->getAttachmentId() ?> |
+                <strong>Files:</strong> <?= (int)$files->getSize() ?>
+            </p>
+        </div>
+
+        <!-- File Upload Section -->
+        <div class="fm-upload-section">
+            <h3>Upload New Files</h3>
+            <form id="file-upload-form" enctype="multipart/form-data">
+                <input type="hidden" name="form_key" value="<?= $block->escapeHtmlAttr($block->getFormKey()) ?>" />
+                <input type="hidden" name="attachment_id" value="<?= (int)$attachment->getAttachmentId() ?>" />
+                
+                <div class="fm-upload-area">
+                    <input type="file" name="attachment_files[]" id="attachment-files-input" multiple accept="*/*" style="display: none;" />
+                    <label for="attachment-files-input" class="fm-upload-label">
+                        <span class="fm-upload-icon">📁</span>
+                        <span>Click to select files or drag & drop here</span>
+                        <small>You can select multiple files</small>
+                    </label>
+                </div>
+                
+                <div id="selected-files-list" class="fm-selected-files"></div>
+            </form>
+        </div>
+
+        <!-- Existing Files Section -->
+        <div class="fm-files-section">
+            <h3>Existing Files</h3>
+            <?php if ($files->getSize() > 0): ?>
+                <div class="fm-files-grid" id="files-grid">
+                    <?php foreach ($files as $file): ?>
+                        <div class="fm-file-card" data-file-id="<?= (int)$file->getFileId() ?>">
+                            <?php if ($file->getIsPrimary()): ?>
+                                <span class="fm-primary-badge">PRIMARY</span>
+                            <?php endif; ?>
+                            
+                            <div class="fm-file-name"><?= $block->escapeHtml($file->getOriginalFilename()) ?></div>
+                            <div class="fm-file-meta">
+                                <span><?= $block->escapeHtml($block->formatFileSize($file->getFileSize())) ?></span>
+                                <span>Downloads: <?= (int)$file->getDownloadCount() ?></span>
+                            </div>
+                            
+                            <div class="fm-file-actions">
+                                <button type="button" class="fm-btn fm-btn-download" data-file-id="<?= (int)$file->getFileId() ?>">
+                                    Download
+                                </button>
+                                <?php if ($block->isPreviewable($file->getOriginalFilename())): ?>
+                                    <button type="button" class="fm-btn fm-btn-preview" data-file-id="<?= (int)$file->getFileId() ?>" data-filename="<?= $block->escapeHtmlAttr($file->getOriginalFilename()) ?>">
+                                        Preview
+                                    </button>
+                                <?php endif; ?>
+                                <?php if (!$file->getIsPrimary()): ?>
+                                    <button type="button" class="fm-btn fm-btn-primary" data-file-id="<?= (int)$file->getFileId() ?>">
+                                        Set Primary
+                                    </button>
+                                <?php endif; ?>
+                                <button type="button" class="fm-btn fm-btn-delete" data-file-id="<?= (int)$file->getFileId() ?>">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div class="fm-no-files">
+                    <p>No files uploaded yet. Use the upload section above to add files.</p>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <div class="fm-footer">
+            <button type="button" class="action-secondary fm-close-btn">Close</button>
+            <a href="<?= $block->escapeUrl($block->getEditUrl()) ?>" class="action-primary" target="_blank">
+                Open Full Editor
+            </a>
+        </div>
+    <?php else: ?>
+        <div class="fm-error">
+            <p>Attachment not found.</p>
+        </div>
+    <?php endif; ?>
+</div>
+
+<!-- Preview Modal -->
+<div id="file-preview-modal" style="display: none;">
+    <div class="fm-preview-content">
+        <button type="button" class="fm-preview-close">&times;</button>
+        <div id="file-preview-container"></div>
+    </div>
+</div>
+
+<style>
+.file-manager-modal-content {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.fm-header {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e3e3e3;
+}
+
+.fm-header h2 {
+    margin: 0 0 10px 0;
+    font-size: 22px;
+    color: #333;
+}
+
+.fm-info {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.fm-upload-section {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 30px;
+}
+
+.fm-upload-section h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.fm-upload-area {
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    padding: 30px;
+    text-align: center;
+    background: #fff;
+    transition: all 0.3s;
+}
+
+.fm-upload-area:hover {
+    border-color: #eb5202;
+    background: #f5f9fc;
+}
+
+.fm-upload-label {
+    display: block;
+    cursor: pointer;
+}
+
+.fm-upload-icon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.fm-upload-label span {
+    display: block;
+    margin: 5px 0;
+}
+
+.fm-upload-label small {
+    color: #999;
+    font-size: 12px;
+}
+
+.fm-selected-files {
+    margin: 15px 0;
+}
+
+.fm-selected-file {
+    background: #fff;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 3px;
+    border: 1px solid #e3e3e3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fm-files-section h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.fm-files-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.fm-file-card {
+    background: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    padding: 15px;
+    position: relative;
+    transition: box-shadow 0.3s;
+}
+
+.fm-file-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.fm-primary-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #eb5202;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.fm-file-name {
+    font-weight: 600;
+    margin-bottom: 8px;
+    word-break: break-word;
+    color: #333;
+}
+
+.fm-file-meta {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 10px;
+}
+
+.fm-file-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.fm-btn {
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #333;
+    transition: all 0.2s;
+}
+
+.fm-btn:hover {
+    background: #f5f5f5;
+}
+
+.fm-btn-download {
+    background: #eb5202;
+    color: #fff;
+    border-color: #eb5202;
+}
+
+.fm-btn-download:hover {
+    background: #c44400;
+}
+
+.fm-btn-delete {
+    background: #e22626;
+    color: #fff;
+    border-color: #e22626;
+}
+
+.fm-btn-delete:hover {
+    background: #c61d1d;
+}
+
+.fm-no-files {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.fm-footer {
+    border-top: 1px solid #e3e3e3;
+    padding-top: 15px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.fm-error {
+    text-align: center;
+    padding: 40px 20px;
+    color: #e22626;
+}
+
+#file-preview-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fm-preview-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    background: #fff;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.fm-preview-close {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: #e22626;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    z-index: 10001;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fm-preview-close:hover {
+    background: #c61d1d;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+#file-preview-container {
+    max-width: 1200px;
+    max-height: 80vh;
+    overflow: auto;
+}
+
+#file-preview-container img {
+    max-width: 100%;
+    height: auto;
+}
+</style>
+
+<script type="text/javascript">
+require([
+    'jquery',
+    'Magento_Ui/js/modal/alert',
+    'Magento_Ui/js/modal/confirm',
+    'mage/translate'
+], function($, alert, confirm, $t) {
+    'use strict';
+
+    var uploadUrl = '<?= $block->escapeJs($block->getUploadUrl()) ?>';
+    var downloadUrl = '<?= $block->escapeJs($block->getDownloadUrl('FILE_ID_PLACEHOLDER')) ?>';
+    var previewUrl = '<?= $block->escapeJs($block->getPreviewUrl('FILE_ID_PLACEHOLDER')) ?>';
+    var deleteUrl = '<?= $block->escapeJs($block->getDeleteFileUrl()) ?>';
+    var setPrimaryUrl = '<?= $block->escapeJs($block->getSetPrimaryUrl()) ?>';
+
+    // File upload handling - auto-upload on selection
+    $('#attachment-files-input').on('change', function() {
+        var files = this.files;
+        if (files.length > 0) {
+            // Display selected files
+            $('#selected-files-list').empty();
+            $('#selected-files-list').append(
+                '<div class="fm-uploading-message">' +
+                '<span style="color: #eb5202; font-weight: bold;">' +
+                $t('Uploading %1 file(s)...').replace('%1', files.length) +
+                '</span>' +
+                '</div>'
+            );
+
+            // Upload immediately
+            uploadSelectedFiles(files, this);
+        }
+    });
+
+
+    // Download button
+    $(document).on('click', '.fm-btn-download', function() {
+        var fileId = $(this).data('file-id');
+        var url = downloadUrl.replace('FILE_ID_PLACEHOLDER', fileId);
+        window.location.href = url;
+    });
+
+    // Preview button
+    $(document).on('click', '.fm-btn-preview', function() {
+        var fileId = $(this).data('file-id');
+        var filename = $(this).data('filename');
+        var url = previewUrl.replace('FILE_ID_PLACEHOLDER', fileId);
+        
+        $('#file-preview-container').html('<div style="text-align:center;padding:20px;">Loading...</div>');
+        $('#file-preview-modal').fadeIn();
+        
+        var ext = filename.split('.').pop().toLowerCase();
+        var safeFilename = $('<span>').text(filename).html();
+        var safeUrl = $('<span>').text(url).html();
+        if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].indexOf(ext) !== -1) {
+            $('#file-preview-container').html('<img src="' + safeUrl + '" alt="' + safeFilename + '" />');
+        } else if (ext === 'pdf') {
+            $('#file-preview-container').html('<embed src="' + safeUrl + '" type="application/pdf" width="100%" height="600px" />');
+        } else {
+            $('#file-preview-container').html('<iframe src="' + safeUrl + '" width="100%" height="600px" style="border:none;"></iframe>');
+        }
+    });
+
+    // Close preview
+    $(document).on('click', '.fm-preview-close', function() {
+        $('#file-preview-modal').fadeOut();
+    });
+
+    // Delete button
+    $(document).on('click', '.fm-btn-delete', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+
+        var fileId = $(this).data('file-id');
+        var card = $(this).closest('.fm-file-card');
+
+        confirm({
+            title: $t('Delete File'),
+            content: $t('Are you sure you want to delete this file? This action cannot be undone.'),
+            actions: {
+                confirm: function() {
+                    $('body').trigger('processStart');
+
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'POST',
+                        data: {
+                            file_id: fileId,
+                            form_key: window.FORM_KEY
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            $('body').trigger('processStop');
+                            if (response.success) {
+                                card.fadeOut(300, function() {
+                                    $(this).remove();
+                                    if ($('.fm-file-card').length === 0) {
+                                        $('.fm-files-grid').html('<div class="fm-no-files"><p>' + $t('No files uploaded yet.') + '</p></div>');
+                                    }
+                                });
+                            } else {
+                                alert({
+                                    title: $t('Error'),
+                                    content: response.message || $t('Error deleting file')
+                                });
+                            }
+                        },
+                        error: function() {
+                            $('body').trigger('processStop');
+                            alert({
+                                title: $t('Error'),
+                                content: $t('Error deleting file. Please try again.')
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+    // Set Primary button
+    $(document).on('click', '.fm-btn-primary', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+
+        var fileId = $(this).data('file-id');
+
+        confirm({
+            title: $t('Set Primary File'),
+            content: $t('Are you sure you want to set this file as the primary file?'),
+            actions: {
+                confirm: function() {
+                    $('body').trigger('processStart');
+
+                    console.log('Setting file as primary:', fileId);
+
+                    $.ajax({
+                        url: setPrimaryUrl,
+                        type: 'POST',
+                        data: {
+                            file_id: fileId,
+                            form_key: window.FORM_KEY
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            $('body').trigger('processStop');
+                            console.log('Set primary response:', response);
+
+                            if (response.success) {
+                                console.log('Primary file set successfully, reloading file list...');
+
+                                // Reload the entire file list to show updated primary badge
+                                loadFileList();
+                            } else {
+                                console.error('Failed to set primary:', response.message);
+                                alert({
+                                    title: $t('Error'),
+                                    content: response.message || $t('Error setting primary file')
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            $('body').trigger('processStop');
+                            console.error('Set primary error:', error, status, xhr.responseText);
+                            alert({
+                                title: $t('Error'),
+                                content: $t('Error setting primary file. Please try again.')
+                            });
+                        }
+                    });
+                }
+            }
+        });
+
+        return false;
+    });
+
+    // Close modal button
+    $(document).on('click', '.fm-close-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        console.log('Close button clicked, closing modal...');
+
+        // Find the modal wrapper that has the stored modal instance
+        var modalWrapper = $('.attachment-file-manager-modal-wrapper');
+
+        if (modalWrapper.length) {
+            var modalInstance = modalWrapper.data('modalInstance');
+
+            if (modalInstance && typeof modalInstance.closeModal === 'function') {
+                // Use the stored modal instance
+                // Grid reload will happen automatically via modalclosed event in file-manager-modal.js
+                modalInstance.closeModal();
+            } else {
+                // Fallback: try to close via jQuery UI modal
+                var modalPopup = $('.modal-popup._show').first();
+                if (modalPopup.length) {
+                    try {
+                        modalPopup.modal('closeModal');
+                    } catch (e) {
+                        // If that fails, just hide it
+                        modalPopup.hide();
+                        $('.modals-overlay').hide();
+                    }
+                }
+            }
+        }
+
+        return false;
+    });
+
+    // Upload selected files function
+    function uploadSelectedFiles(files, inputElement) {
+        if (!files || files.length === 0) {
+            console.log('No files to upload');
+            return;
+        }
+
+        var attachmentId = $('.file-manager-modal-content').data('attachment-id') || 0;
+        console.log('Uploading files for attachment ID:', attachmentId);
+        console.log('Number of files:', files.length);
+
+        // Create FormData for file upload
+        var formData = new FormData();
+        formData.append('form_key', window.FORM_KEY);
+        formData.append('attachment_id', attachmentId);
+
+        // Append all selected files
+        for (var i = 0; i < files.length; i++) {
+            formData.append('files[]', files[i]);
+            console.log('Added file:', files[i].name);
+        }
+
+        // Perform AJAX upload
+        $.ajax({
+            url: uploadUrl,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function(response) {
+                console.log('Upload response:', response);
+
+                if (response.success) {
+                    // Show success message
+                    $('#selected-files-list').html(
+                        '<div class="fm-success-message" style="color: #3c763d; font-weight: bold; padding: 10px; background: #dff0d8; border-radius: 4px;">' +
+                        response.message +
+                        '</div>'
+                    );
+
+                    // Clear the file input
+                    $(inputElement).val('');
+
+                    console.log('Upload successful, reloading file list in 500ms...');
+
+                    // Reload the file list via AJAX
+                    setTimeout(function() {
+                        console.log('Now calling loadFileList()');
+                        loadFileList();
+                    }, 500);
+                } else {
+                    console.error('Upload failed:', response.message);
+                    // Show error message
+                    $('#selected-files-list').html(
+                        '<div class="fm-error-message" style="color: #a94442; font-weight: bold; padding: 10px; background: #f2dede; border-radius: 4px;">' +
+                        (response.message || $t('Upload failed. Please try again.')) +
+                        '</div>'
+                    );
+                    $(inputElement).val('');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Upload error:', error, status, xhr.responseText);
+                $('#selected-files-list').html(
+                    '<div class="fm-error-message" style="color: #a94442; font-weight: bold; padding: 10px; background: #f2dede; border-radius: 4px;">' +
+                    $t('Upload failed: ') + error +
+                    '</div>'
+                );
+                $(inputElement).val('');
+            }
+        });
+    }
+
+    // Load file list via AJAX
+    function loadFileList() {
+        var attachmentId = $('.file-manager-modal-content').data('attachment-id') || 0;
+
+        console.log('Loading file list for attachment ID:', attachmentId);
+
+        $.ajax({
+            url: '<?= $block->escapeUrl($block->getUrl('productattachments/attachment/fileList')) ?>',
+            type: 'GET',
+            data: {
+                attachment_id: attachmentId
+            },
+            success: function(response) {
+                console.log('File list response:', response);
+
+                if (response.success && response.html) {
+                    // Find the files section and update it
+                    var $filesSection = $('.fm-files-section');
+                    console.log('Files section found:', $filesSection.length);
+
+                    if ($filesSection.length) {
+                        // Remove existing grid or no-files div
+                        $filesSection.find('.fm-files-grid, .fm-no-files').remove();
+
+                        // Append new HTML after the h3
+                        $filesSection.find('h3').after(response.html);
+
+                        console.log('File list updated successfully');
+
+                        // Clear success message after reload
+                        setTimeout(function() {
+                            $('#selected-files-list').empty();
+                        }, 2000);
+                    } else {
+                        console.error('Files section not found!');
+                    }
+                } else {
+                    console.error('Invalid response:', response);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Failed to reload file list:', error);
+                console.error('Status:', status);
+                console.error('Response:', xhr.responseText);
+            }
+        });
+    }
+
+    function formatBytes(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        var k = 1024;
+        var sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        var i = Math.floor(Math.log(bytes) / Math.log(k));
+        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    }
+});
+</script>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Email Templates Configuration
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="panth_productattachments_download_notification" label="Product Attachment Download Notification" file="panth_download_notification.html" type="html" module="Panth_ProductAttachments" area="frontend"/>
+</config>

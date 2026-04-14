@@ -1,0 +1,12 @@
+Panth Commercial License
+
+Copyright (c) 2026 Kishan Savaliya. All rights reserved.
+
+Use of this software is governed by the LICENSE.txt file distributed
+with the source code. Panth_ProductAttachments is a paid extension
+available on the Adobe Commerce Marketplace.
+
+For all licensing, support, and general questions, please contact:
+    Email:    kishansavaliyakb@gmail.com
+    Website:  https://kishansavaliya.com
+    Company:  Panth Infotech

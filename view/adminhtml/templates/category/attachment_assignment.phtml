@@ -1,0 +1,188 @@
+<?php
+/**
+ * Category Attachment Assignment Template
+ *
+ * @var $block \Panth\ProductAttachments\Block\Adminhtml\Category\Edit\Tab\AttachmentList
+ */
+
+$category = $block->getCategory();
+$categoryId = $category ? $category->getId() : 0;
+$attachments = $block->getAttachments();
+$selectedIds = $block->getSelectedAttachmentIds();
+?>
+
+<div class="attachment-assignment-wrapper">
+    <div class="admin__field-control" style="margin-bottom: 20px;">
+        <button type="button"
+                id="create-new-attachment-btn"
+                class="action-secondary"
+                onclick="window.open('<?= $block->escapeUrl($block->getUrl('productattachments/attachment/new')) ?>', '_blank')">
+            <span><?= $block->escapeHtml(__('Create New Attachment')) ?></span>
+        </button>
+        <button type="button"
+                id="refresh-attachment-list-btn"
+                class="action-secondary"
+                style="margin-left: 10px;">
+            <span><?= $block->escapeHtml(__('Refresh List')) ?></span>
+        </button>
+    </div>
+
+    <div class="admin__field-control">
+        <input type="text"
+               id="attachment-search"
+               class="admin__control-text"
+               placeholder="<?= $block->escapeHtmlAttr(__('Search Attachments...')) ?>"
+               style="width: 100%; margin-bottom: 15px;" />
+    </div>
+
+    <div class="attachment-items-list" style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 15px; background: #fff;">
+        <?php if (empty($attachments)): ?>
+            <p><?= $block->escapeHtml(__('No attachments available.')) ?></p>
+        <?php else: ?>
+            <?php foreach ($attachments as $attachment): ?>
+                <div class="attachment-item" data-title="<?= $block->escapeHtmlAttr(strtolower($attachment->getTitle())) ?>">
+                    <label style="display: block; padding: 8px; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
+                        <input type="checkbox"
+                               name="attachment_items[]"
+                               value="<?= (int)$attachment->getAttachmentId() ?>"
+                               <?= in_array($attachment->getAttachmentId(), $selectedIds) ? 'checked="checked"' : '' ?>
+                               style="margin-right: 10px;" />
+                        <strong><?= $block->escapeHtml($attachment->getTitle()) ?></strong>
+                        <span style="color: #666; font-size: 12px; margin-left: 10px;">(ID: <?= (int)$attachment->getAttachmentId() ?>)</span>
+                    </label>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+
+    <div class="attachment-save-button-wrapper" style="margin-top: 20px; padding: 10px; background: #f5f5f5; border-top: 1px solid #ccc;">
+        <button type="button"
+                id="save-category-attachment-btn"
+                class="action-primary"
+                style="padding: 8px 20px;">
+            <span><?= $block->escapeHtml(__('Save Attachment Assignments')) ?></span>
+        </button>
+        <span id="attachment-save-message" style="margin-left: 15px; font-weight: bold;"></span>
+    </div>
+</div>
+
+<script>
+require([
+    'jquery',
+    'Magento_Ui/js/modal/alert',
+    'domReady!'
+], function($, alert) {
+    'use strict';
+
+    $('#attachment-search').on('keyup', function() {
+        var searchTerm = $(this).val().toLowerCase();
+        $('.attachment-item').each(function() {
+            var title = $(this).data('title');
+            if (title.indexOf(searchTerm) !== -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+
+    $('#refresh-attachment-list-btn').on('click', function() {
+        location.reload();
+    });
+
+    $('#save-category-attachment-btn').on('click', function() {
+        var btn = $(this);
+        var messageEl = $('#attachment-save-message');
+        var categoryId = <?= (int)$categoryId ?>;
+
+        if (!categoryId) {
+            alert({
+                title: $.mage.__('Error'),
+                content: $.mage.__('Category ID not found. Please save the category first.')
+            });
+            return;
+        }
+
+        var selectedAttachments = [];
+        $('input[name="attachment_items[]"]:checked').each(function() {
+            selectedAttachments.push($(this).val());
+        });
+
+        btn.prop('disabled', true).find('span').text('<?= $block->escapeJs(__('Saving...')) ?>');
+        messageEl.text('').removeClass('message-success message-error');
+
+        $.ajax({
+            url: '<?= $block->escapeUrl($block->getUrl('productattachments/category/saveattachment')) ?>',
+            type: 'POST',
+            data: {
+                category_id: categoryId,
+                attachment_ids: selectedAttachments.join(','),
+                form_key: window.FORM_KEY
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    messageEl.text(response.message).css('color', 'green').addClass('message-success');
+                } else {
+                    messageEl.text(response.message).css('color', 'red').addClass('message-error');
+                }
+            },
+            error: function() {
+                messageEl.text('<?= $block->escapeJs(__('An error occurred while saving.')) ?>').css('color', 'red').addClass('message-error');
+            },
+            complete: function() {
+                btn.prop('disabled', false).find('span').text('<?= $block->escapeJs(__('Save Attachment Assignments')) ?>');
+                setTimeout(function() {
+                    messageEl.fadeOut(function() {
+                        $(this).text('').show().removeClass('message-success message-error');
+                    });
+                }, 5000);
+            }
+        });
+    });
+});
+</script>
+
+<style>
+.attachment-item label:hover {
+    background-color: #f5f5f5;
+}
+
+.attachment-save-button-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+#save-category-attachment-btn,
+#create-new-attachment-btn,
+#refresh-attachment-list-btn {
+    background: #eb5202;
+    border: 1px solid #eb5202;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 3px;
+    padding: 8px 15px;
+}
+
+#create-new-attachment-btn,
+#refresh-attachment-list-btn {
+    background: #514943;
+    border-color: #514943;
+}
+
+#save-category-attachment-btn:hover {
+    background: #c44400;
+    border-color: #c44400;
+}
+
+#create-new-attachment-btn:hover,
+#refresh-attachment-list-btn:hover {
+    background: #35302c;
+    border-color: #35302c;
+}
+
+#save-category-attachment-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+</style>

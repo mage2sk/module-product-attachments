@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Widget Configuration
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget id="panth_product_attachments" class="Panth\ProductAttachments\Block\Widget\Attachments">
+        <label translate="true">Product Attachments Widget</label>
+        <description translate="true">Display product attachments anywhere on your site</description>
+        <parameters>
+            <parameter name="title" xsi:type="text" required="false" visible="true">
+                <label translate="true">Widget Title</label>
+                <description translate="true">Title to display above attachments</description>
+            </parameter>
+            <parameter name="attachment_ids" xsi:type="text" required="false" visible="true">
+                <label translate="true">Attachment IDs</label>
+                <description translate="true">Comma-separated list of attachment IDs (e.g., 1,2,3). Leave empty to show all attachments.</description>
+            </parameter>
+            <parameter name="type_id" xsi:type="select" required="false" visible="true" source_model="Panth\ProductAttachments\Model\Config\Source\AttachmentType">
+                <label translate="true">Filter by Type</label>
+                <description translate="true">Show only attachments of specific type</description>
+            </parameter>
+            <parameter name="limit" xsi:type="text" required="false" visible="true">
+                <label translate="true">Limit</label>
+                <description translate="true">Maximum number of attachments to display</description>
+            </parameter>
+            <parameter name="display_mode" xsi:type="select" required="false" visible="true">
+                <label translate="true">Display Mode</label>
+                <description translate="true">Choose how to display attachments</description>
+                <options>
+                    <option name="table" value="table" selected="true">
+                        <label translate="true">Table View</label>
+                    </option>
+                    <option name="list" value="list">
+                        <label translate="true">List View</label>
+                    </option>
+                </options>
+            </parameter>
+            <parameter name="template" xsi:type="select" visible="true">
+                <label translate="true">Template</label>
+                <options>
+                    <option name="default" value="Panth_ProductAttachments::widget/attachments.phtml" selected="true">
+                        <label translate="true">Default Template</label>
+                    </option>
+                    <option name="hyva" value="Panth_ProductAttachments::widget/attachments_hyva.phtml">
+                        <label translate="true">Hyva Theme Template</label>
+                    </option>
+                </options>
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>

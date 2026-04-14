@@ -1,0 +1,27 @@
+<?php
+/**
+ * Grid Modal Initialization Template
+ *
+ * @var $block \Magento\Backend\Block\Template
+ */
+?>
+<script>
+require([
+    'jquery',
+    'Panth_ProductAttachments/js/file-manager-modal',
+    'mage/url',
+    'domReady!'
+], function($, fileManagerModal, urlBuilder) {
+    'use strict';
+
+    // Initialize file manager modal
+    // Use getUrl() to get absolute admin URL with proper secret key
+    var config = {
+        modalUrl: '<?= $block->escapeJs($block->getUrl('productattachments/attachment/filemanager')) ?>'
+    };
+
+    console.log('[GRID MODAL INIT] Config:', config);
+
+    fileManagerModal(config);
+});
+</script>

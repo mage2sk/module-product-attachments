@@ -1,0 +1,202 @@
+<?php
+/**
+ * Attachments Widget Template - Hyva Theme
+ * Uses Alpine.js instead of RequireJS
+ *
+ * @var $block \Panth\ProductAttachments\Block\Widget\Attachments
+ */
+
+if (!$block->canShow()) {
+    return;
+}
+
+$viewMode = $block->getDisplayMode();
+$attachments = $block->getAttachments();
+$attachmentsArray = $attachments->getItems();
+
+// Calculate total items (links + files)
+$totalItems = 0;
+foreach ($attachmentsArray as $attachment) {
+    if ($block->hasLink($attachment)) {
+        $totalItems++;
+    }
+    if ($block->hasFiles($attachment)) {
+        $totalItems += $attachment->getFiles()->getSize();
+    }
+}
+
+// Get context prefix for unique IDs
+$contextPrefix = $block->getContextPrefix();
+$uniqueId = $contextPrefix . $viewMode . '_' . uniqid();
+?>
+
+<!-- Define Alpine.js component BEFORE using it -->
+<script>
+if (typeof window.attachmentPreviewComponents === 'undefined') {
+    window.attachmentPreviewComponents = {};
+}
+
+window.attachmentPreviewComponents['<?= $block->escapeJs($uniqueId) ?>'] = function() {
+    return {
+        showModal: false,
+        modalContent: '',
+
+        openPreview(previewUrl, filename, filetype, attachmentId, fileId, isDownloadable, fileInfo) {
+            fileInfo = fileInfo || {};
+            const previewableTypes = ['PDF', 'JPG', 'JPEG', 'PNG', 'GIF', 'SVG', 'WEBP', 'BMP'];
+            let content = '';
+
+            // File information header
+            const fileInfoHtml = '<div style="background: #f5f5f5; padding: 15px; margin-bottom: 15px; border-radius: 4px;">' +
+                '<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">' +
+                '<div>' +
+                '<h4 style="margin: 0 0 5px 0; color: #333;">' + (fileInfo.title || filename) + '</h4>' +
+                '<p style="margin: 0; color: #666; font-size: 14px;">' +
+                '<i class="bi bi-file-earmark"></i> ' + filename +
+                '</p>' +
+                '</div>' +
+                '<div style="text-align: right;">' +
+                '<span class="badge bg-secondary" style="display: inline-block; margin-bottom: 5px;">' + (fileInfo.type || filetype) + '</span><br>' +
+                '<small style="color: #666;"><i class="bi bi-hdd"></i> ' + (fileInfo.size || 'Unknown size') + '</small>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+            content += fileInfoHtml;
+
+            // Build preview content based on file type
+            if (previewableTypes.indexOf(filetype.toUpperCase()) !== -1) {
+                if (filetype.toUpperCase() === 'PDF') {
+                    content += '<div style="text-align: center; background: #f9f9f9; padding: 10px; border-radius: 4px;">' +
+                        '<iframe src="' + previewUrl + '" width="100%" height="600px" style="border: 1px solid #ddd; border-radius: 4px;"></iframe>' +
+                        '</div>';
+                } else {
+                    // Images
+                    content += '<div style="text-align: center; background: #f9f9f9; padding: 20px; border-radius: 4px;">' +
+                        '<img src="' + previewUrl + '" alt="Preview" style="max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />' +
+                        '</div>';
+                }
+            } else {
+                // Non-previewable files
+                let icon = 'bi-file-earmark';
+                const fileTypeUpper = filetype.toUpperCase();
+
+                // Set specific icons for different file types
+                if (['DOC', 'DOCX'].indexOf(fileTypeUpper) !== -1) icon = 'bi-file-earmark-word';
+                else if (['XLS', 'XLSX'].indexOf(fileTypeUpper) !== -1) icon = 'bi-file-earmark-excel';
+                else if (['PPT', 'PPTX'].indexOf(fileTypeUpper) !== -1) icon = 'bi-file-earmark-ppt';
+                else if (['ZIP', 'RAR', '7Z'].indexOf(fileTypeUpper) !== -1) icon = 'bi-file-earmark-zip';
+                else if (['MP4', 'AVI', 'MOV'].indexOf(fileTypeUpper) !== -1) icon = 'bi-file-earmark-play';
+                else if (['MP3', 'WAV'].indexOf(fileTypeUpper) !== -1) icon = 'bi-file-earmark-music';
+                else if (['TXT', 'CSV'].indexOf(fileTypeUpper) !== -1) icon = 'bi-file-earmark-text';
+
+                content += '<div style="text-align: center; padding: 60px 40px; background: #f9f9f9; border-radius: 4px;">' +
+                    '<i class="bi ' + icon + '" style="font-size: 80px; color: #bdc3c7; margin-bottom: 20px;"></i>' +
+                    '<h4 style="color: #666; margin-bottom: 10px;">Preview Not Available</h4>' +
+                    '<p style="color: #999; margin-bottom: 20px;">This file type (' + filetype.toUpperCase() + ') cannot be previewed in the browser.</p>' +
+                    '<p style="color: #999;">Please download the file to view its contents.</p>' +
+                    '</div>';
+            }
+
+            // Add action buttons
+            let actionsHtml = '<div style="text-align: center; padding: 20px; border-top: 1px solid #ddd; margin-top: 20px;">';
+
+            if (isDownloadable) {
+                let downloadUrl = '<?= $block->escapeUrl($block->getUrl('productattachments/download/file')) ?>';
+                downloadUrl += '?id=' + attachmentId;
+                if (fileId) {
+                    downloadUrl += '&file_id=' + fileId;
+                }
+                actionsHtml += '<button class="action primary" onclick="window.location.href=\'' + downloadUrl + '\'" style="margin-right: 10px;">' +
+                    '<span><i class="bi bi-download"></i> Download File</span>' +
+                    '</button>';
+            } else {
+                actionsHtml += '<button class="action secondary" disabled title="Login required to download">' +
+                    '<span><i class="bi bi-lock"></i> Login Required</span>' +
+                    '</button>';
+            }
+
+            actionsHtml += '</div>';
+            content += actionsHtml;
+
+            // Set content and show modal
+            this.modalContent = content;
+            this.showModal = true;
+        }
+    }
+};
+</script>
+
+<div class="panth-product-attachment-module panth-attachment-wrapper widget-attachments-container"
+     id="panth-attachments-<?= $block->escapeHtmlAttr($contextPrefix) ?><?= $block->escapeHtmlAttr($viewMode) ?>"
+     data-view-mode="<?= $block->escapeHtmlAttr($viewMode) ?>"
+     x-data="window.attachmentPreviewComponents['<?= $block->escapeJs($uniqueId) ?>']()">
+
+    <!-- Header Section -->
+    <?php if ($block->getTitle()): ?>
+    <div class="pa-header">
+        <h2 class="pa-title">
+            <i class="bi bi-paperclip"></i>
+            <?= $block->escapeHtml($block->getTitle()) ?>
+            <span class="pa-count">(<?= (int)$totalItems ?>)</span>
+        </h2>
+    </div>
+    <?php endif; ?>
+
+    <!-- Attachments Content -->
+    <div class="pa-content">
+        <?php
+        // Set up data for view mode template
+        $parentBlock = $block;
+
+        // Render view mode template to maintain Alpine.js scope
+        $viewModeTemplate = $viewMode . '_hyva.phtml';
+        // phpcs:ignore Magento2.Security.IncludeFile.FoundIncludeFile
+        include $this->getTemplateFile('Panth_ProductAttachments::attachment/view-modes/' . $viewModeTemplate);
+        ?>
+    </div>
+
+    <!-- No Results Message -->
+    <div class="pa-no-results" style="display:none;">
+        <i class="fas fa-search"></i>
+        <p><?= $block->escapeHtml(__('No attachments found matching your criteria.')) ?></p>
+    </div>
+
+    <!-- Preview Modal Container -->
+    <div x-show="showModal"
+         x-cloak
+         @keydown.escape.window="showModal = false"
+         class="modals-wrapper">
+        <div class="modals-overlay" @click="showModal = false"></div>
+        <aside class="modal-popup" role="dialog">
+            <div class="modal-inner-wrap">
+                <button class="action-close" @click="showModal = false" type="button" aria-label="Close">
+                    <span><?= $block->escapeHtml(__('Close')) ?></span>
+                </button>
+                <div class="modal-content" x-html="modalContent"></div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<!-- Guest Login Modal (if guest downloads not allowed) -->
+<?php if (!$block->allowGuestDownloads() && !$block->isCustomerLoggedIn()): ?>
+<div id="pa-guest-login-modal" style="display:none;">
+    <div class="pa-guest-modal-content">
+        <button class="pa-modal-close"><i class="fas fa-times"></i></button>
+        <i class="fas fa-lock pa-lock-icon"></i>
+        <h3><?= $block->escapeHtml(__('Login Required')) ?></h3>
+        <p><?= $block->escapeHtml(__('Please login or create an account to download this attachment.')) ?></p>
+        <div class="pa-modal-actions">
+            <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>" class="pa-btn pa-btn-primary">
+                <i class="fas fa-sign-in-alt"></i>
+                <?= $block->escapeHtml(__('Login')) ?>
+            </a>
+            <a href="<?= $block->escapeUrl($block->getCreateAccountUrl()) ?>" class="pa-btn pa-btn-secondary">
+                <i class="fas fa-user-plus"></i>
+                <?= $block->escapeHtml(__('Create Account')) ?>
+            </a>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

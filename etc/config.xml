@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Default Configuration Values
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <panth_productattachments>
+            <!-- General Settings -->
+            <general>
+                <enabled>1</enabled>
+                <show_on_product>1</show_on_product>
+                <show_on_category>1</show_on_category>
+                <show_on_cms>1</show_on_cms>
+            </general>
+
+            <!-- Display Settings -->
+            <display>
+                <show_file_size>1</show_file_size>
+                <show_download_count>1</show_download_count>
+                <show_description>1</show_description>
+                <enable_preview>1</enable_preview>
+                <default_view_mode>list</default_view_mode>
+            </display>
+
+            <!-- Access Control -->
+            <access>
+                <default_access_level>public</default_access_level>
+                <guest_download>1</guest_download>
+            </access>
+
+            <!-- Download Analytics -->
+            <analytics>
+                <enabled>1</enabled>
+                <log_retention_days>90</log_retention_days>
+            </analytics>
+
+            <!-- Email Notifications -->
+            <email>
+                <notify_on_download>0</notify_on_download>
+                <notification_email></notification_email>
+            </email>
+
+            <!-- Custom CSS -->
+            <custom_css>
+                <enabled>0</enabled>
+                <custom_styles></custom_styles>
+            </custom_css>
+        </panth_productattachments>
+    </default>
+</config>

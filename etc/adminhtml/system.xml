@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * System Configuration
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="panth" translate="label" sortOrder="400">
+            <label>🚀 Panth Extensions</label>
+        </tab>
+        <section id="panth_productattachments" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Product Attachments</label>
+            <tab>panth</tab>
+            <resource>Panth_ProductAttachments::config</resource>
+
+            <!-- General Settings -->
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Module</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable or disable the Product Attachments module</comment>
+                </field>
+                <field id="show_on_product" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show on Product Pages</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Automatically display attachments on product pages</comment>
+                </field>
+                <field id="show_on_category" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show on Category Pages</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Automatically display attachments on category pages</comment>
+                </field>
+                <field id="show_on_cms" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show on CMS Pages</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Automatically display attachments on CMS pages</comment>
+                </field>
+            </group>
+
+            <!-- Display Settings -->
+            <group id="display" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Display Settings</label>
+                <field id="show_file_size" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show File Size</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Display file size in frontend</comment>
+                </field>
+                <field id="show_description" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Description</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Display attachment description in frontend</comment>
+                </field>
+                <field id="enable_preview" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable File Preview</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable preview button for PDFs and images</comment>
+                </field>
+                <field id="default_view_mode" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Default View Mode</label>
+                    <source_model>Panth\ProductAttachments\Model\Config\Source\ViewMode</source_model>
+                    <comment>Select the default display mode for attachments on frontend</comment>
+                </field>
+            </group>
+
+            <!-- Access Control Settings -->
+            <group id="access" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Access Control Settings</label>
+                <field id="guest_download" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allow Guest Downloads</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Allow guest users to download public attachments</comment>
+                </field>
+            </group>
+
+            <!-- Download Analytics -->
+            <group id="analytics" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Download Analytics</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Download Tracking</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Track download activity (IP address, user agent, etc.)</comment>
+                </field>
+                <field id="log_retention_days" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Log Retention Days</label>
+                    <comment>Number of days to keep download logs (0 = keep forever)</comment>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+            </group>
+
+            <!-- Email Notifications -->
+            <group id="email" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Email Notifications</label>
+                <field id="notify_on_download" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Notify on Download</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Send email notification when file is downloaded</comment>
+                </field>
+                <field id="notification_email" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Notification Email</label>
+                    <comment>Email address to receive download notifications</comment>
+                    <validate>validate-email</validate>
+                    <depends>
+                        <field id="notify_on_download">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- Custom CSS -->
+            <group id="custom_css" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Custom CSS</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Custom CSS</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable custom CSS for attachments (loaded after module CSS for easy overrides)</comment>
+                </field>
+                <field id="custom_styles" translate="label comment" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Custom CSS Code</label>
+                    <comment><![CDATA[Enter custom CSS to style the attachments display. Custom CSS is loaded after the module's default CSS. Prefix selectors with <code>.panth-product-attachment-module</code> to scope your styles.]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

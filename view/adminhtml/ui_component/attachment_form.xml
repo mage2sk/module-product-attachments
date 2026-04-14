@@ -1,0 +1,399 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Attachment Form UI Component
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">attachment_form.attachment_form_data_source</item>
+            <item name="component" xsi:type="string">Panth_ProductAttachments/js/form-interceptor</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Attachment Information</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+        <item name="config" xsi:type="array">
+            <item name="exports" xsi:type="array">
+                <item name="selectorPrefix" xsi:type="string">attachment_form</item>
+            </item>
+        </item>
+        <item name="attributes" xsi:type="array">
+            <item name="enctype" xsi:type="string">multipart/form-data</item>
+        </item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="back" class="Panth\ProductAttachments\Block\Adminhtml\Attachment\Edit\BackButton"/>
+            <button name="delete" class="Panth\ProductAttachments\Block\Adminhtml\Attachment\Edit\DeleteButton"/>
+            <button name="save" class="Panth\ProductAttachments\Block\Adminhtml\Attachment\Edit\SaveButton"/>
+            <button name="save_and_continue" class="Panth\ProductAttachments\Block\Adminhtml\Attachment\Edit\SaveAndContinueButton"/>
+        </buttons>
+        <namespace>attachment_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>attachment_form.attachment_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="attachment_form_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="productattachments/attachment/save"/>
+        </settings>
+        <dataProvider class="Panth\ProductAttachments\Ui\Component\DataProvider\AttachmentDataProvider" name="attachment_form_data_source">
+            <settings>
+                <requestFieldName>attachment_id</requestFieldName>
+                <primaryFieldName>attachment_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <!-- General Information Fieldset -->
+    <fieldset name="general">
+        <settings>
+            <label translate="true">General Information</label>
+            <opened>true</opened>
+        </settings>
+        <field name="attachment_id" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">attachment</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <visible>false</visible>
+                <dataScope>attachment_id</dataScope>
+            </settings>
+        </field>
+        <field name="is_active" sortOrder="5" formElement="checkbox">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">attachment</item>
+                    <item name="default" xsi:type="number">1</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>boolean</dataType>
+                <label translate="true">Enable Attachment</label>
+                <dataScope>is_active</dataScope>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <valueMap>
+                            <map name="false" xsi:type="number">0</map>
+                            <map name="true" xsi:type="number">1</map>
+                        </valueMap>
+                        <prefer>toggle</prefer>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="title" sortOrder="10" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">attachment</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>text</dataType>
+                <label translate="true">Title</label>
+                <dataScope>title</dataScope>
+            </settings>
+        </field>
+        <field name="description" sortOrder="20" formElement="wysiwyg">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">attachment</item>
+                    <item name="wysiwygConfigData" xsi:type="array">
+                        <item name="height" xsi:type="string">200px</item>
+                        <item name="add_variables" xsi:type="boolean">false</item>
+                        <item name="add_widgets" xsi:type="boolean">false</item>
+                        <item name="add_images" xsi:type="boolean">true</item>
+                        <item name="add_directives" xsi:type="boolean">false</item>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <label translate="true">Description</label>
+                <dataScope>description</dataScope>
+            </settings>
+            <formElements>
+                <wysiwyg>
+                    <settings>
+                        <wysiwyg>true</wysiwyg>
+                    </settings>
+                </wysiwyg>
+            </formElements>
+        </field>
+        <field name="customer_group_ids" sortOrder="25" formElement="multiselect">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">attachment</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Customer Groups</label>
+                <dataScope>customer_group_ids</dataScope>
+                <tooltip>
+                    <description translate="true">Select customer groups that can view this attachment. Leave empty for all groups.</description>
+                </tooltip>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="Panth\ProductAttachments\Model\Config\Source\CustomerGroup"/>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+        <field name="is_link" sortOrder="27" formElement="checkbox">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">attachment</item>
+                    <item name="default" xsi:type="number">0</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>boolean</dataType>
+                <label translate="true">Is Link Attachment</label>
+                <dataScope>is_link</dataScope>
+                <tooltip>
+                    <description translate="true">Enable this for external links instead of file uploads</description>
+                </tooltip>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <valueMap>
+                            <map name="false" xsi:type="number">0</map>
+                            <map name="true" xsi:type="number">1</map>
+                        </valueMap>
+                        <prefer>toggle</prefer>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="link_url" sortOrder="28" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">attachment</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Link URL</label>
+                <dataScope>link_url</dataScope>
+                <validation>
+                    <rule name="validate-url" xsi:type="boolean">true</rule>
+                </validation>
+                <tooltip>
+                    <description translate="true">Enter the external URL (must start with http:// or https://)</description>
+                </tooltip>
+            </settings>
+        </field>
+        <field name="link_target" sortOrder="29" formElement="select">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">attachment</item>
+                    <item name="default" xsi:type="string">_blank</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Link Target</label>
+                <dataScope>link_target</dataScope>
+                <tooltip>
+                    <description translate="true">How to open the link</description>
+                </tooltip>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options>
+                            <option name="blank" xsi:type="array">
+                                <item name="value" xsi:type="string">_blank</item>
+                                <item name="label" xsi:type="string" translate="true">New Tab</item>
+                            </option>
+                            <option name="self" xsi:type="array">
+                                <item name="value" xsi:type="string">_self</item>
+                                <item name="label" xsi:type="string" translate="true">Same Tab</item>
+                            </option>
+                        </options>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="expires_at" sortOrder="26" formElement="date">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">attachment</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>date</dataType>
+                <label translate="true">Expires At</label>
+                <dataScope>expires_at</dataScope>
+                <visible>true</visible>
+            </settings>
+            <formElements>
+                <date>
+                    <settings>
+                        <options>
+                            <option name="dateFormat" xsi:type="string">MM/dd/yyyy</option>
+                            <option name="timeFormat" xsi:type="string">HH:mm:ss</option>
+                            <option name="showsTime" xsi:type="boolean">true</option>
+                        </options>
+                    </settings>
+                </date>
+            </formElements>
+        </field>
+        <field name="attachment_type_id" sortOrder="30" formElement="select">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">attachment</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>int</dataType>
+                <label translate="true">Attachment Type</label>
+                <dataScope>attachment_type_id</dataScope>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Panth\ProductAttachments\Model\Config\Source\AttachmentType"/>
+                        <caption translate="true">-- Please Select --</caption>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="stores" sortOrder="45" formElement="multiselect">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">attachment</item>
+                    <item name="default" xsi:type="number">0</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>int</dataType>
+                <label translate="true">Store View</label>
+                <dataScope>stores</dataScope>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="Magento\Store\Ui\Component\Listing\Column\Store\Options"/>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+        <field name="sort_order" sortOrder="50" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">attachment</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="validate-zero-or-greater" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>text</dataType>
+                <label translate="true">Sort Order</label>
+                <dataScope>sort_order</dataScope>
+            </settings>
+        </field>
+    </fieldset>
+
+    <!-- File Management Fieldset -->
+    <fieldset name="file_management">
+        <settings>
+            <label translate="true">File Management</label>
+            <opened>true</opened>
+            <collapsible>true</collapsible>
+        </settings>
+        <container name="files_container">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+            <htmlContent name="html_content">
+                <block class="Panth\ProductAttachments\Block\Adminhtml\Attachment\Edit\Tab\Files" name="attachment.edit.tab.files"/>
+            </htmlContent>
+        </container>
+    </fieldset>
+
+    <!-- Assign to Products -->
+    <fieldset name="assign_to_products">
+        <settings>
+            <label translate="true">Assign to Products</label>
+            <collapsible>true</collapsible>
+            <opened>false</opened>
+        </settings>
+        <container name="assign_products_container">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+            <htmlContent name="html_content">
+                <block class="Panth\ProductAttachments\Block\Adminhtml\Attachment\Edit\Tab\Product" name="attachment.edit.tab.products"/>
+            </htmlContent>
+        </container>
+    </fieldset>
+
+    <!-- Assign to Categories -->
+    <fieldset name="assign_to_categories">
+        <settings>
+            <label translate="true">Assign to Catalog Categories</label>
+            <collapsible>true</collapsible>
+            <opened>false</opened>
+        </settings>
+        <container name="assign_categories_container">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+            <htmlContent name="html_content">
+                <block class="Panth\ProductAttachments\Block\Adminhtml\Attachment\Edit\Tab\CategoryTree" name="attachment.edit.tab.category_tree"/>
+            </htmlContent>
+        </container>
+    </fieldset>
+
+    <!-- Assign to CMS Pages -->
+    <fieldset name="assign_to_pages">
+        <settings>
+            <label translate="true">Assign to CMS Pages</label>
+            <collapsible>true</collapsible>
+            <opened>false</opened>
+        </settings>
+        <container name="assign_pages_container">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+            <htmlContent name="html_content">
+                <block class="Panth\ProductAttachments\Block\Adminhtml\Attachment\Edit\Tab\Page" name="attachment.edit.tab.pages"/>
+            </htmlContent>
+        </container>
+    </fieldset>
+</form>

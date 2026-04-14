@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Unused Files Listing UI Component
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">unusedfiles_listing.unusedfiles_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="scan">
+                <url path="*/*/index"/>
+                <class>primary</class>
+                <label translate="true">Scan for Unused Files</label>
+            </button>
+        </buttons>
+        <spinner>unusedfiles_columns</spinner>
+        <deps>
+            <dep>unusedfiles_listing.unusedfiles_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="unusedfiles_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">file_path</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <dataProvider class="Panth\ProductAttachments\Ui\Component\DataProvider\UnusedFilesDataProvider" name="unusedfiles_listing_data_source">
+            <settings>
+                <requestFieldName>file_path</requestFieldName>
+                <primaryFieldName>file_path</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filterSearch name="fulltext"/>
+        <filters name="listing_filters"/>
+        <massaction name="listing_massaction">
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to delete selected files?</message>
+                        <title translate="true">Delete Files</title>
+                    </confirm>
+                    <url path="productattachments/unusedfiles/massDelete"/>
+                    <type>delete</type>
+                    <label translate="true">Delete Selected</label>
+                </settings>
+            </action>
+        </massaction>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="unusedfiles_columns">
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>file_path</indexField>
+            </settings>
+        </selectionsColumn>
+        <column name="file_name">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">File Name</label>
+            </settings>
+        </column>
+        <column name="file_path">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">File Path</label>
+            </settings>
+        </column>
+        <column name="location">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Location</label>
+            </settings>
+        </column>
+        <column name="formatted_size">
+            <settings>
+                <filter>false</filter>
+                <label translate="true">File Size</label>
+            </settings>
+        </column>
+        <column name="modified_date" class="Magento\Ui\Component\Listing\Columns\Date">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Modified Date</label>
+            </settings>
+        </column>
+        <column name="age_days">
+            <settings>
+                <filter>false</filter>
+                <label translate="true">Age (Days)</label>
+            </settings>
+        </column>
+    </columns>
+</listing>

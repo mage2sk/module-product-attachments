@@ -1,0 +1,74 @@
+<?php
+/**
+ * Custom Delete All Button
+ *
+ * @var $block \Magento\Framework\View\Element\Template
+ */
+$deleteUrl = $block->getUrl('productattachments/unusedfiles/deleteAll');
+?>
+
+<style>
+.page-actions-buttons-custom {
+    margin-bottom: 20px;
+}
+.delete-all-custom-btn {
+    background: #eb5202;
+    border: 1px solid #d94d02;
+    color: #ffffff;
+    padding: 7px 15px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.6rem;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background 0.3s;
+}
+.delete-all-custom-btn:hover {
+    background: #d94d02;
+    border-color: #c04602;
+}
+.delete-all-custom-btn:active {
+    background: #c04602;
+}
+</style>
+
+<div class="page-actions-buttons-custom">
+    <button type="button"
+            class="delete-all-custom-btn"
+            id="delete-all-unused-custom"
+            onclick="confirmDeleteAllUnused('<?= $block->escapeJs($deleteUrl) ?>')">
+        <span><?= $block->escapeHtml(__('Delete All Unused Files')) ?></span>
+    </button>
+</div>
+
+<script type="text/javascript">
+require([
+    'jquery',
+    'Magento_Ui/js/modal/confirm',
+    'mage/translate'
+], function($, confirmation, $t) {
+    'use strict';
+
+    window.confirmDeleteAllUnused = function(url) {
+        console.log('Custom delete all button clicked!');
+
+        confirmation({
+            title: $t('Delete All Unused Files'),
+            content: $t('Are you sure you want to delete all unused files? This action cannot be undone.'),
+            actions: {
+                confirm: function() {
+                    console.log('Confirmed! Redirecting to:', url);
+                    window.location.href = url;
+                },
+                cancel: function() {
+                    console.log('Cancelled');
+                }
+            }
+        });
+
+        return false;
+    };
+
+    console.log('Custom delete all button script loaded');
+});
+</script>

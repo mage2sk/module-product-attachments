@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Frontend Events Configuration
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <!--
+        Switch templates to Hyva versions when Hyva theme (or child theme) is active
+        This event fires after layout blocks are generated, allowing us to change templates dynamically
+    -->
+    <event name="layout_generate_blocks_after">
+        <observer name="panth_productattachments_switch_template_for_hyva" instance="Panth\ProductAttachments\Observer\SwitchTemplateForHyva" />
+    </event>
+</config>

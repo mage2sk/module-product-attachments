@@ -1,0 +1,27 @@
+<?php
+/**
+ * File Upload Notice Template
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+?>
+<div class="message message-notice">
+    <p><strong><?= $block->escapeHtml(__('File Upload')) ?></strong></p>
+    <p><?= $block->escapeHtml(__('File upload functionality will be available in the next phase.')) ?></p>
+    <p><?= $block->escapeHtml(__('For now, you can save attachment metadata. The file upload feature with drag-and-drop, validation, and versioning will be implemented in Phase 3.')) ?></p>
+</div>
+
+<style>
+.message-notice {
+    padding: 15px;
+    margin: 10px 0;
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+}
+.message-notice p {
+    margin: 5px 0;
+}
+</style>

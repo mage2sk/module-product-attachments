@@ -1,0 +1,365 @@
+/**
+ * Bootstrap Components - Scoped to Product Attachments Module Only
+ *
+ * This file contains only the Bootstrap 5 components needed for our module,
+ * scoped to .panth-product-attachment-module and .panth-attachment-wrapper
+ * to prevent conflicts with other modules and themes.
+ */
+
+/* ========================================
+   TABLES
+   ======================================== */
+
+.panth-product-attachment-module .table-responsive,
+.panth-attachment-wrapper .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.panth-product-attachment-module .table,
+.panth-attachment-wrapper .table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    vertical-align: top;
+    border-color: #dee2e6;
+}
+
+.panth-product-attachment-module .table > :not(caption) > * > *,
+.panth-attachment-wrapper .table > :not(caption) > * > * {
+    padding: 0.5rem;
+    background-color: var(--bs-table-bg);
+    border-bottom-width: 1px;
+    box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+}
+
+.panth-product-attachment-module .table > tbody,
+.panth-attachment-wrapper .table > tbody {
+    vertical-align: inherit;
+}
+
+.panth-product-attachment-module .table > thead,
+.panth-attachment-wrapper .table > thead {
+    vertical-align: bottom;
+}
+
+.panth-product-attachment-module .table-sm > :not(caption) > * > *,
+.panth-attachment-wrapper .table-sm > :not(caption) > * > * {
+    padding: 0.25rem;
+}
+
+.panth-product-attachment-module .table-hover > tbody > tr:hover,
+.panth-attachment-wrapper .table-hover > tbody > tr:hover {
+    --bs-table-accent-bg: rgba(0, 0, 0, 0.075);
+    color: #212529;
+}
+
+.panth-product-attachment-module .table-light,
+.panth-attachment-wrapper .table-light {
+    --bs-table-bg: #f8f9fa;
+    --bs-table-striped-bg: #ecedee;
+    --bs-table-striped-color: #000;
+    --bs-table-active-bg: #dfe0e1;
+    --bs-table-active-color: #000;
+    --bs-table-hover-bg: #e5e6e7;
+    --bs-table-hover-color: #000;
+    color: #000;
+    border-color: #dfe0e1;
+}
+
+.panth-product-attachment-module .align-middle,
+.panth-attachment-wrapper .align-middle {
+    vertical-align: middle !important;
+}
+
+/* ========================================
+   BADGES
+   ======================================== */
+
+.panth-product-attachment-module .badge,
+.panth-attachment-wrapper .badge {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+
+.panth-product-attachment-module .badge.bg-primary,
+.panth-attachment-wrapper .badge.bg-primary {
+    background-color: #0d6efd !important;
+}
+
+.panth-product-attachment-module .badge.bg-secondary,
+.panth-attachment-wrapper .badge.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+.panth-product-attachment-module .badge.bg-info,
+.panth-attachment-wrapper .badge.bg-info {
+    background-color: #0dcaf0 !important;
+    color: #000 !important;
+}
+
+.panth-product-attachment-module .badge.bg-warning,
+.panth-attachment-wrapper .badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+.panth-product-attachment-module .btn,
+.panth-attachment-wrapper .btn {
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.panth-product-attachment-module .btn:hover,
+.panth-attachment-wrapper .btn:hover {
+    color: #212529;
+}
+
+.panth-product-attachment-module .btn-primary,
+.panth-attachment-wrapper .btn-primary {
+    color: #fff;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.panth-product-attachment-module .btn-primary:hover,
+.panth-attachment-wrapper .btn-primary:hover {
+    color: #fff;
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+.panth-product-attachment-module .btn-secondary,
+.panth-attachment-wrapper .btn-secondary {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.panth-product-attachment-module .btn-secondary:hover,
+.panth-attachment-wrapper .btn-secondary:hover {
+    color: #fff;
+    background-color: #5c636a;
+    border-color: #565e64;
+}
+
+.panth-product-attachment-module .btn-info,
+.panth-attachment-wrapper .btn-info {
+    color: #000;
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+}
+
+.panth-product-attachment-module .btn-info:hover,
+.panth-attachment-wrapper .btn-info:hover {
+    color: #000;
+    background-color: #31d2f2;
+    border-color: #25cff2;
+}
+
+.panth-product-attachment-module .btn-warning,
+.panth-attachment-wrapper .btn-warning {
+    color: #000;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.panth-product-attachment-module .btn-warning:hover,
+.panth-attachment-wrapper .btn-warning:hover {
+    color: #000;
+    background-color: #ffca2c;
+    border-color: #ffc720;
+}
+
+.panth-product-attachment-module .btn-sm,
+.panth-attachment-wrapper .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 0.2rem;
+}
+
+/* ========================================
+   LIST GROUPS
+   ======================================== */
+
+.panth-product-attachment-module .list-group,
+.panth-attachment-wrapper .list-group {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.panth-product-attachment-module .list-group-item,
+.panth-attachment-wrapper .list-group-item {
+    position: relative;
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #212529;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.panth-product-attachment-module .list-group-item:first-child,
+.panth-attachment-wrapper .list-group-item:first-child {
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+}
+
+.panth-product-attachment-module .list-group-item:last-child,
+.panth-attachment-wrapper .list-group-item:last-child {
+    border-bottom-right-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+.panth-product-attachment-module .list-group-flush,
+.panth-attachment-wrapper .list-group-flush {
+    border-radius: 0;
+}
+
+.panth-product-attachment-module .list-group-flush > .list-group-item,
+.panth-attachment-wrapper .list-group-flush > .list-group-item {
+    border-width: 0 0 1px;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Display */
+.panth-product-attachment-module .d-block,
+.panth-attachment-wrapper .d-block {
+    display: block !important;
+}
+
+.panth-product-attachment-module .d-flex,
+.panth-attachment-wrapper .d-flex {
+    display: flex !important;
+}
+
+.panth-product-attachment-module .d-inline-block,
+.panth-attachment-wrapper .d-inline-block {
+    display: inline-block !important;
+}
+
+/* Flex */
+.panth-product-attachment-module .flex-grow-1,
+.panth-attachment-wrapper .flex-grow-1 {
+    flex-grow: 1 !important;
+}
+
+.panth-product-attachment-module .flex-shrink-0,
+.panth-attachment-wrapper .flex-shrink-0 {
+    flex-shrink: 0 !important;
+}
+
+.panth-product-attachment-module .align-items-center,
+.panth-attachment-wrapper .align-items-center {
+    align-items: center !important;
+}
+
+.panth-product-attachment-module .justify-content-between,
+.panth-attachment-wrapper .justify-content-between {
+    justify-content: space-between !important;
+}
+
+.panth-product-attachment-module .flex-wrap,
+.panth-attachment-wrapper .flex-wrap {
+    flex-wrap: wrap !important;
+}
+
+/* Gap */
+.panth-product-attachment-module .gap-2,
+.panth-attachment-wrapper .gap-2 {
+    gap: 0.5rem !important;
+}
+
+.panth-product-attachment-module .gap-3,
+.panth-attachment-wrapper .gap-3 {
+    gap: 1rem !important;
+}
+
+/* Text Alignment */
+.panth-product-attachment-module .text-center,
+.panth-attachment-wrapper .text-center {
+    text-align: center !important;
+}
+
+.panth-product-attachment-module .text-right,
+.panth-attachment-wrapper .text-right {
+    text-align: right !important;
+}
+
+.panth-product-attachment-module .text-left,
+.panth-attachment-wrapper .text-left {
+    text-align: left !important;
+}
+
+/* Text Colors */
+.panth-product-attachment-module .text-muted,
+.panth-attachment-wrapper .text-muted {
+    color: #6c757d !important;
+}
+
+/* Spacing */
+.panth-product-attachment-module .mb-1,
+.panth-attachment-wrapper .mb-1 {
+    margin-bottom: 0.25rem !important;
+}
+
+.panth-product-attachment-module .mb-2,
+.panth-attachment-wrapper .mb-2 {
+    margin-bottom: 0.5rem !important;
+}
+
+/* Overflow */
+.panth-product-attachment-module .min-w-0,
+.panth-attachment-wrapper .min-w-0 {
+    min-width: 0 !important;
+}
+
+/* Whitespace */
+.panth-product-attachment-module .whitespace-nowrap,
+.panth-attachment-wrapper .whitespace-nowrap {
+    white-space: nowrap !important;
+}
+
+/* Truncate */
+.panth-product-attachment-module .truncate,
+.panth-attachment-wrapper .truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Small text */
+.panth-product-attachment-module small,
+.panth-attachment-wrapper small {
+    font-size: 0.875em;
+}

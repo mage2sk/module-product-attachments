@@ -1,0 +1,875 @@
+/**
+ * Product Attachments - Professional Design
+ * Parent Class: .panth-product-attachment-module
+ *
+ * CSS variables with fallback defaults — these are overridden by
+ * theme-config.json values if they exist in backend-config.css @theme block.
+ * We declare them here as fallbacks because Tailwind v4 tree-shakes
+ * @theme vars that aren't referenced by utility classes.
+ */
+:root {
+    --pa-primary: var(--color-primary, #0D9488);
+    --pa-primary-dark: var(--color-primary-darker, #0F766E);
+    --pa-bg: #FFFFFF;
+    --pa-bg-hover: #F5F5F5;
+    --pa-text: var(--color-fg, #171717);
+    --pa-text-secondary: var(--color-fg-secondary, #525252);
+    --pa-text-muted: #A3A3A3;
+    --pa-border: #E5E5E5;
+    --pa-icon-bg: var(--color-primary, #0D9488);
+    --pa-icon-text: #FFFFFF;
+    --pa-badge-bg: #F0FDFA;
+    --pa-badge-text: var(--color-primary-darker, #0F766E);
+    --pa-download-btn-bg: var(--color-primary, #0D9488);
+    --pa-download-btn-text: #FFFFFF;
+    --pa-table-header-bg: #171717;
+    --pa-table-header-text: #FFFFFF;
+    --pa-table-row-hover: rgba(13,148,136,0.08);
+    --pa-success: #16A34A;
+    --pa-warning: #EAB308;
+    --pa-danger: #DC2626;
+}
+
+/* Main Container */
+.panth-product-attachment-module .pa-attachments {
+    margin: 2.5rem 0;
+    clear: both;
+}
+
+/* Spacing around the attachment module on all pages */
+.panth-product-attachment-module {
+    margin: 2rem 0;
+    padding-top: 0.5rem;
+}
+
+/* Header */
+.panth-product-attachment-module .pa-header {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--pa-primary) 0%, var(--pa-primary-dark) 100%);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.panth-product-attachment-module .pa-header h2 {
+    color: var(--pa-icon-text);
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.panth-product-attachment-module .pa-header .pa-count {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--pa-icon-text);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Table View - Enhanced */
+.panth-product-attachment-module .table-responsive {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.panth-product-attachment-module .table {
+    margin-bottom: 0;
+}
+
+.panth-product-attachment-module .table thead th {
+    background: var(--pa-table-header-bg);
+    color: var(--pa-table-header-text);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 15px 12px;
+    border: none;
+}
+
+.panth-product-attachment-module .table tbody tr {
+    background: var(--pa-bg);
+    transition: all 0.3s ease;
+}
+
+.panth-product-attachment-module .table tbody tr:hover {
+    background: var(--pa-bg-hover);
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px var(--pa-table-row-hover);
+}
+
+.panth-product-attachment-module .table tbody td {
+    padding: 16px 12px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--pa-border);
+    font-size: 14px;
+    color: var(--pa-text);
+}
+
+/* Table Icons */
+.panth-product-attachment-module .pa-attachment-icon {
+    font-size: 24px;
+    color: var(--pa-primary);
+}
+
+/* List View - 2-Column Compact Grid */
+.panth-product-attachment-module .list-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.panth-product-attachment-module .list-group-item {
+    border: 1px solid var(--pa-border);
+    border-radius: 10px;
+    padding: 15px;
+    background: var(--pa-bg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.panth-product-attachment-module .list-group-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px var(--pa-table-row-hover);
+    border-color: var(--pa-primary);
+}
+
+/* List Icon Circle - Compact */
+.panth-product-attachment-module .pa-list-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pa-primary) 0%, var(--pa-primary-dark) 100%);
+    color: var(--pa-icon-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    box-shadow: 0 3px 6px var(--pa-table-row-hover);
+}
+
+.panth-product-attachment-module .list-group-item:hover .pa-list-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Typography */
+.panth-product-attachment-module .list-group-item strong,
+.panth-product-attachment-module .table tbody strong {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--pa-text);
+}
+
+.panth-product-attachment-module .pa-filename,
+.panth-product-attachment-module .table small {
+    font-size: 13px;
+    color: var(--pa-text-muted);
+    line-height: 1.5;
+}
+
+/* Badges - Professional */
+.panth-product-attachment-module .badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.panth-product-attachment-module .badge.bg-info {
+    background: linear-gradient(135deg, var(--pa-primary) 0%, var(--pa-primary-dark) 100%) !important;
+    box-shadow: 0 2px 4px var(--pa-table-row-hover);
+}
+
+.panth-product-attachment-module .badge.bg-secondary {
+    background: linear-gradient(135deg, var(--pa-text-muted) 0%, var(--pa-text-secondary) 100%) !important;
+    box-shadow: 0 2px 4px rgba(115, 115, 115, 0.3);
+}
+
+/* Buttons - Modern Design */
+.panth-product-attachment-module .btn {
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.panth-product-attachment-module .btn-sm {
+    padding: 8px 12px;
+    font-size: 18px;
+}
+
+.panth-product-attachment-module .btn-primary {
+    background: linear-gradient(135deg, var(--pa-primary) 0%, var(--pa-primary-dark) 100%);
+    box-shadow: 0 4px 8px var(--pa-table-row-hover);
+}
+
+.panth-product-attachment-module .btn-primary:hover {
+    background: var(--pa-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px var(--pa-table-row-hover);
+}
+
+.panth-product-attachment-module .btn-secondary {
+    background: linear-gradient(135deg, var(--pa-text-muted) 0%, var(--pa-text-secondary) 100%);
+    color: var(--pa-bg);
+}
+
+.panth-product-attachment-module .btn-secondary:hover {
+    background: var(--pa-text-secondary);
+}
+
+.panth-product-attachment-module .btn-info {
+    background: linear-gradient(135deg, var(--pa-primary) 0%, var(--pa-primary-dark) 100%);
+    color: var(--pa-icon-text);
+}
+
+.panth-product-attachment-module .btn-info:hover {
+    background: var(--pa-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px var(--pa-table-row-hover);
+}
+
+.panth-product-attachment-module .btn i {
+    line-height: 1;
+}
+
+/* Preview Modal - Global scope (modal is outside module wrapper) */
+.pa-preview-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    overflow: auto;
+}
+
+.pa-preview-modal.show {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.pa-preview-modal-content {
+    background-color: var(--pa-bg);
+    margin: auto;
+    padding: 0;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 1200px;
+    max-height: 90vh;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.pa-preview-modal-header {
+    padding: 20px;
+    background: linear-gradient(135deg, var(--pa-primary) 0%, var(--pa-primary-dark) 100%);
+    color: var(--pa-icon-text);
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pa-preview-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.pa-preview-modal-close {
+    color: var(--pa-icon-text);
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+    transition: transform 0.3s ease;
+}
+
+.pa-preview-modal-close:hover {
+    transform: scale(1.2);
+}
+
+.pa-preview-modal-body {
+    padding: 20px;
+    overflow: auto;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--pa-bg-hover);
+    min-height: 400px;
+}
+
+.pa-preview-modal-body iframe,
+.pa-preview-modal-body img {
+    max-width: 100%;
+    max-height: calc(90vh - 180px);
+    border: none;
+    border-radius: 5px;
+}
+
+.pa-preview-modal-body img {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.pa-preview-modal-footer {
+    padding: 20px;
+    background: var(--pa-bg);
+    border-radius: 0 0 10px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--pa-border);
+}
+
+.pa-preview-no-preview {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--pa-text-muted);
+}
+
+.pa-preview-no-preview i {
+    font-size: 64px;
+    color: var(--pa-text-muted);
+    margin-bottom: 20px;
+    display: block;
+}
+
+.pa-preview-no-preview p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+/* Modal buttons need Bootstrap classes */
+.pa-preview-modal .btn {
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pa-preview-modal .btn-primary {
+    background: linear-gradient(135deg, var(--pa-primary) 0%, var(--pa-primary-dark) 100%);
+    color: var(--pa-download-btn-text);
+    box-shadow: 0 4px 8px var(--pa-table-row-hover);
+}
+
+.pa-preview-modal .btn-primary:hover {
+    background: var(--pa-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px var(--pa-table-row-hover);
+}
+
+.pa-preview-modal .btn-secondary {
+    background: linear-gradient(135deg, var(--pa-text-muted) 0%, var(--pa-text-secondary) 100%);
+    color: var(--pa-bg);
+}
+
+.pa-preview-modal .btn-secondary:hover {
+    background: var(--pa-text-secondary);
+}
+
+.pa-preview-modal .badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pa-preview-modal .badge.bg-secondary {
+    background: linear-gradient(135deg, var(--pa-text-muted) 0%, var(--pa-text-secondary) 100%) !important;
+    color: var(--pa-bg);
+    box-shadow: 0 2px 4px rgba(115, 115, 115, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    /* List view - single column on mobile */
+    .panth-product-attachment-module .list-group {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .panth-product-attachment-module .pa-header {
+        padding: 12px 15px;
+        margin-bottom: 15px;
+    }
+
+    .panth-product-attachment-module .pa-header h2 {
+        font-size: 18px;
+        gap: 6px;
+    }
+
+    .panth-product-attachment-module .pa-header .pa-count {
+        padding: 3px 10px;
+        font-size: 13px;
+    }
+
+    /* Compact horizontal list layout on mobile */
+    .panth-product-attachment-module .list-group-item {
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .panth-product-attachment-module .pa-list-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .panth-product-attachment-module .list-group-item .flex-grow-1 {
+        margin: 0;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .panth-product-attachment-module .list-group-item strong {
+        font-size: 14px;
+        display: block;
+        margin-bottom: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .panth-product-attachment-module .list-group-item .d-flex {
+        flex-wrap: wrap;
+        gap: 5px !important;
+    }
+
+    .panth-product-attachment-module .list-group-item .badge {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+
+    .panth-product-attachment-module .list-group-item small {
+        font-size: 11px;
+    }
+
+    .panth-product-attachment-module .btn {
+        padding: 6px 10px;
+        font-size: 16px;
+    }
+
+    .panth-product-attachment-module .btn-sm {
+        padding: 6px 10px;
+        font-size: 16px;
+    }
+
+    .panth-product-attachment-module .d-flex.gap-2 {
+        gap: 6px !important;
+        flex-shrink: 0;
+    }
+
+    /* Compact horizontal table layout on mobile */
+    .panth-product-attachment-module .table {
+        font-size: 13px;
+    }
+
+    .panth-product-attachment-module .table thead {
+        display: none;
+    }
+
+    .panth-product-attachment-module .table tbody tr {
+        display: block;
+        margin-bottom: 10px;
+        border: 1px solid var(--pa-border);
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        padding: 10px;
+    }
+
+    .panth-product-attachment-module .table tbody td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px solid var(--pa-bg-hover);
+        text-align: left;
+    }
+
+    .panth-product-attachment-module .table tbody td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--pa-text);
+        font-size: 12px;
+        margin-right: 10px;
+        flex-shrink: 0;
+    }
+
+    .panth-product-attachment-module .table tbody td:last-child {
+        border-bottom: none;
+        padding-top: 8px;
+        justify-content: center;
+    }
+
+    .panth-product-attachment-module .table tbody td:last-child:before {
+        display: none;
+    }
+
+    /* Make file info more compact */
+    .panth-product-attachment-module .table tbody td strong {
+        font-size: 13px;
+        display: block;
+        margin-bottom: 2px;
+    }
+
+    .panth-product-attachment-module .table tbody td small {
+        font-size: 11px;
+        display: block;
+    }
+
+    .panth-product-attachment-module .table .pa-attachment-icon {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .panth-product-attachment-module .pa-attachments {
+        margin: 10px 0;
+    }
+
+    .panth-product-attachment-module .pa-header {
+        padding: 10px 12px;
+        margin-bottom: 12px;
+    }
+
+    .panth-product-attachment-module .pa-header h2 {
+        font-size: 16px;
+    }
+
+    .panth-product-attachment-module .list-group {
+        gap: 8px;
+    }
+
+    .panth-product-attachment-module .list-group-item {
+        padding: 8px;
+        gap: 8px;
+    }
+
+    .panth-product-attachment-module .pa-list-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+
+    .panth-product-attachment-module .list-group-item strong {
+        font-size: 13px;
+        margin-bottom: 2px;
+    }
+
+    .panth-product-attachment-module .badge {
+        font-size: 9px;
+        padding: 3px 6px;
+    }
+
+    .panth-product-attachment-module .list-group-item small {
+        font-size: 10px;
+    }
+
+    .panth-product-attachment-module .btn {
+        padding: 5px 8px;
+        font-size: 14px;
+    }
+
+    .panth-product-attachment-module .btn-sm {
+        padding: 5px 8px;
+        font-size: 14px;
+    }
+
+    .panth-product-attachment-module .d-flex.gap-2 {
+        gap: 5px !important;
+    }
+
+    /* Extra compact table on small mobile */
+    .panth-product-attachment-module .table tbody tr {
+        margin-bottom: 8px;
+        padding: 8px;
+    }
+
+    .panth-product-attachment-module .table tbody td {
+        padding: 5px 0;
+    }
+
+    .panth-product-attachment-module .table tbody td:before {
+        font-size: 11px;
+    }
+
+    .panth-product-attachment-module .table tbody td strong {
+        font-size: 12px;
+    }
+
+    .panth-product-attachment-module .table tbody td small {
+        font-size: 10px;
+    }
+
+    .panth-product-attachment-module .table .pa-attachment-icon {
+        font-size: 18px;
+    }
+
+    /* Modal responsive */
+    .pa-preview-modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .pa-preview-modal-header {
+        padding: 12px;
+    }
+
+    .pa-preview-modal-header h3 {
+        font-size: 14px;
+    }
+
+    .pa-preview-modal-body {
+        padding: 12px;
+        min-height: 250px;
+    }
+
+    .pa-preview-modal-footer {
+        padding: 12px;
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+/* Loading Animation */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.panth-product-attachment-module .pa-loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--pa-text-muted);
+}
+
+.panth-product-attachment-module .pa-loading i {
+    font-size: 32px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Empty State */
+.panth-product-attachment-module .pa-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--pa-text-muted);
+}
+
+.panth-product-attachment-module .pa-empty i {
+    font-size: 64px;
+    color: var(--pa-text-muted);
+    margin-bottom: 20px;
+}
+
+.panth-product-attachment-module .pa-empty p {
+    font-size: 18px;
+    margin: 0;
+}
+
+/* Smooth Animations */
+.panth-product-attachment-module * {
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Focus States */
+.panth-product-attachment-module .btn:focus,
+.panth-product-attachment-module .list-group-item:focus {
+    outline: 2px solid var(--pa-primary);
+    outline-offset: 2px;
+}
+
+/* ========================================
+   MODAL POPUP STYLES (Hyva theme with Alpine.js)
+   Only applies to Hyva modals, won't affect Luma
+   ======================================== */
+
+/* Modal Wrapper - Overlay (Hyva only) */
+.panth-product-attachment-module .modals-wrapper,
+.panth-attachment-wrapper .modals-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Only show as flex when visible (Alpine.js controls display) */
+.panth-product-attachment-module .modals-wrapper:not([style*="display: none"]),
+.panth-attachment-wrapper .modals-wrapper:not([style*="display: none"]) {
+    display: flex;
+}
+
+/* Modal Overlay Background (Hyva only) */
+.panth-product-attachment-module .modals-overlay,
+.panth-attachment-wrapper .modals-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 899;
+}
+
+/* Modal Popup Container (Hyva only) */
+.panth-product-attachment-module .modals-wrapper .modal-popup,
+.panth-attachment-wrapper .modals-wrapper .modal-popup {
+    position: relative;
+    z-index: 900;
+    background: var(--pa-bg);
+    border-radius: 4px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+    max-width: 90%;
+    max-height: 90vh;
+    width: 900px;
+    margin: 2rem auto;
+}
+
+/* Modal Inner Wrap (Hyva only) */
+.panth-product-attachment-module .modals-wrapper .modal-inner-wrap,
+.panth-attachment-wrapper .modals-wrapper .modal-inner-wrap {
+    background: var(--pa-bg);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+
+/* Modal Content (Hyva only) */
+.panth-product-attachment-module .modals-wrapper .modal-content,
+.panth-attachment-wrapper .modals-wrapper .modal-content {
+    padding: 0;
+    overflow-y: auto;
+    max-height: calc(90vh - 60px);
+}
+
+/* Alpine.js x-cloak (global for Hyva) */
+[x-cloak] {
+    display: none !important;
+}
+
+/* ==============================================
+   Close Button - Positioned outside popup with nice background
+   ============================================== */
+
+/* Close button positioning - Outside modal popup, top right corner */
+.panth-product-attachment-module .action-close,
+.panth-attachment-wrapper .action-close,
+.pa-modal-close-btn {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    padding: 0;
+    margin: 0;
+    background: var(--pa-danger);
+    border: 3px solid var(--pa-bg);
+    border-radius: 50%;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+/* Close button hover effect */
+.panth-product-attachment-module .action-close:hover,
+.panth-attachment-wrapper .action-close:hover,
+.pa-modal-close-btn:hover {
+    background: var(--pa-danger);
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* X icon using CSS */
+.panth-product-attachment-module .action-close:before,
+.panth-attachment-wrapper .action-close:before,
+.pa-modal-close-btn:before {
+    content: '\00d7';
+    font-size: 28px;
+    line-height: 1;
+    color: var(--pa-bg);
+    font-weight: 400;
+    transition: transform 0.3s ease;
+}
+
+/* Hide the span text (accessibility) */
+.panth-product-attachment-module .action-close span,
+.panth-attachment-wrapper .action-close span,
+.pa-modal-close-btn span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Adjust modal inner wrap - no extra padding needed now */
+.panth-product-attachment-module .modal-inner-wrap,
+.panth-attachment-wrapper .modal-inner-wrap {
+    position: relative;
+    padding: 20px;
+}
+
+/* Modal popup - ensure position relative for absolute close button */
+.panth-product-attachment-module .modal-popup,
+.panth-attachment-wrapper .modal-popup {
+    position: relative;
+}
+
+/* Modal content spacing */
+.panth-product-attachment-module .modal-content,
+.panth-attachment-wrapper .modal-content {
+    padding-top: 10px;
+}

@@ -1,0 +1,299 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Database Schema
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <!-- Main Attachment Table -->
+    <table name="panth_product_attachment" resource="default" engine="innodb" comment="Product Attachment Main Table">
+        <column xsi:type="int" name="attachment_id" unsigned="true" nullable="false" identity="true" comment="Attachment ID"/>
+        <column xsi:type="varchar" name="title" nullable="false" length="255" comment="Attachment Title"/>
+        <column xsi:type="text" name="description" nullable="true" comment="Attachment Description"/>
+        <column xsi:type="int" name="attachment_type_id" unsigned="true" nullable="true" comment="Attachment Type ID"/>
+        <column xsi:type="smallint" name="access_level" unsigned="true" nullable="false" default="0" comment="Access Level: 0=Public, 1=Logged-in, 2=Purchasers"/>
+        <column xsi:type="smallint" name="is_active" unsigned="true" nullable="false" default="1" comment="Is Active"/>
+        <column xsi:type="timestamp" name="expires_at" nullable="true" comment="Expiration Date"/>
+        <column xsi:type="int" name="sort_order" unsigned="true" nullable="false" default="0" comment="Sort Order"/>
+        <column xsi:type="int" name="download_count" unsigned="true" nullable="false" default="0" comment="Total Download Count"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="varchar" name="customer_group_ids" nullable="true" length="255" comment="Customer Group IDs (comma-separated, empty = all groups)"/>
+        <column xsi:type="smallint" name="is_link" unsigned="true" nullable="false" default="0" comment="Is Link Attachment (0=File, 1=Link)"/>
+        <column xsi:type="text" name="link_url" nullable="true" comment="Link URL (for link attachments)"/>
+        <column xsi:type="varchar" name="link_target" nullable="true" length="20" default="_blank" comment="Link Target (_blank, _self)"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="attachment_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="PANTH_ATTACHMENT_TYPE_ID_PANTH_ATTACHMENT_TYPE_TYPE_ID"
+                    table="panth_product_attachment" column="attachment_type_id"
+                    referenceTable="panth_product_attachment_type" referenceColumn="type_id" onDelete="SET NULL"/>
+
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_IS_ACTIVE" indexType="btree">
+            <column name="is_active"/>
+        </index>
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_TYPE_ID" indexType="btree">
+            <column name="attachment_type_id"/>
+        </index>
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_EXPIRES_AT" indexType="btree">
+            <column name="expires_at"/>
+        </index>
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_SORT_ORDER" indexType="btree">
+            <column name="sort_order"/>
+        </index>
+    </table>
+
+    <!-- Attachment Files Table (Multiple files per attachment) -->
+    <table name="panth_product_attachment_file" resource="default" engine="innodb" comment="Attachment Files Table">
+        <column xsi:type="int" name="file_id" unsigned="true" nullable="false" identity="true" comment="File ID"/>
+        <column xsi:type="int" name="attachment_id" unsigned="true" nullable="false" comment="Attachment ID"/>
+        <column xsi:type="varchar" name="filename" nullable="false" length="255" comment="Actual Filename on Disk"/>
+        <column xsi:type="varchar" name="original_filename" nullable="false" length="255" comment="Original Upload Filename"/>
+        <column xsi:type="varchar" name="file_path" nullable="false" length="500" comment="Relative File Path"/>
+        <column xsi:type="int" name="file_size" unsigned="true" nullable="false" default="0" comment="File Size in Bytes"/>
+        <column xsi:type="varchar" name="mime_type" nullable="false" length="100" comment="MIME Type"/>
+        <column xsi:type="varchar" name="file_extension" nullable="false" length="20" comment="File Extension"/>
+        <column xsi:type="varchar" name="file_icon" nullable="true" length="50" comment="Icon Class"/>
+        <column xsi:type="smallint" name="is_primary" unsigned="true" nullable="false" default="0" comment="Is Primary File"/>
+        <column xsi:type="int" name="sort_order" unsigned="true" nullable="false" default="0" comment="Sort Order"/>
+        <column xsi:type="int" name="download_count" unsigned="true" nullable="false" default="0" comment="Download Count"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="file_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="PANTH_ATTACHMENT_FILE_ATTACHMENT_ID_PANTH_ATTACHMENT_ATTACHMENT_ID"
+                    table="panth_product_attachment_file" column="attachment_id"
+                    referenceTable="panth_product_attachment" referenceColumn="attachment_id" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" referenceId="PANTH_PRODUCT_ATTACHMENT_FILE_PATH">
+            <column name="file_path"/>
+        </constraint>
+
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_FILE_ATTACHMENT_ID" indexType="btree">
+            <column name="attachment_id"/>
+        </index>
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_FILE_IS_PRIMARY" indexType="btree">
+            <column name="is_primary"/>
+        </index>
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_FILE_SORT_ORDER" indexType="btree">
+            <column name="sort_order"/>
+        </index>
+    </table>
+
+    <!-- Attachment Type Table -->
+    <table name="panth_product_attachment_type" resource="default" engine="innodb" comment="Attachment Type Table">
+        <column xsi:type="int" name="type_id" unsigned="true" nullable="false" identity="true" comment="Type ID"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="100" comment="Type Name"/>
+        <column xsi:type="varchar" name="code" nullable="false" length="50" comment="Type Code"/>
+        <column xsi:type="varchar" name="icon_class" nullable="true" length="50" comment="Icon Class"/>
+        <column xsi:type="smallint" name="is_active" unsigned="true" nullable="false" default="1" comment="Is Active"/>
+        <column xsi:type="int" name="sort_order" unsigned="true" nullable="false" default="0" comment="Sort Order"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="type_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="PANTH_PRODUCT_ATTACHMENT_TYPE_CODE">
+            <column name="code"/>
+        </constraint>
+
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_TYPE_IS_ACTIVE" indexType="btree">
+            <column name="is_active"/>
+        </index>
+    </table>
+
+    <!-- Version Table -->
+    <table name="panth_product_attachment_version" resource="default" engine="innodb" comment="Attachment Version Table">
+        <column xsi:type="int" name="version_id" unsigned="true" nullable="false" identity="true" comment="Version ID"/>
+        <column xsi:type="int" name="attachment_id" unsigned="true" nullable="false" comment="Attachment ID"/>
+        <column xsi:type="varchar" name="version_number" nullable="false" length="20" comment="Version Number"/>
+        <column xsi:type="varchar" name="filename" nullable="false" length="255" comment="Versioned Filename"/>
+        <column xsi:type="varchar" name="file_path" nullable="false" length="500" comment="File Path"/>
+        <column xsi:type="int" name="file_size" unsigned="true" nullable="false" default="0" comment="File Size in Bytes"/>
+        <column xsi:type="varchar" name="mime_type" nullable="false" length="100" comment="MIME Type"/>
+        <column xsi:type="smallint" name="is_current" unsigned="true" nullable="false" default="0" comment="Is Current Version"/>
+        <column xsi:type="text" name="changelog" nullable="true" comment="Version Changelog"/>
+        <column xsi:type="int" name="uploaded_by" unsigned="true" nullable="true" comment="Admin User ID"/>
+        <column xsi:type="int" name="download_count" unsigned="true" nullable="false" default="0" comment="Version Download Count"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="version_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="PANTH_VERSION_ATTACHMENT_ID_PANTH_ATTACHMENT_ATTACHMENT_ID"
+                    table="panth_product_attachment_version" column="attachment_id"
+                    referenceTable="panth_product_attachment" referenceColumn="attachment_id" onDelete="CASCADE"/>
+        <constraint xsi:type="unique" referenceId="PANTH_PRODUCT_ATTACHMENT_VERSION_UNIQUE">
+            <column name="attachment_id"/>
+            <column name="version_number"/>
+        </constraint>
+
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_VERSION_ATTACHMENT_ID" indexType="btree">
+            <column name="attachment_id"/>
+        </index>
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_VERSION_IS_CURRENT" indexType="btree">
+            <column name="is_current"/>
+        </index>
+    </table>
+
+    <!-- Download Log Table -->
+    <table name="panth_product_attachment_download_log" resource="default" engine="innodb" comment="Attachment Download Log">
+        <column xsi:type="int" name="log_id" unsigned="true" nullable="false" identity="true" comment="Log ID"/>
+        <column xsi:type="int" name="attachment_id" unsigned="true" nullable="false" comment="Attachment ID"/>
+        <column xsi:type="int" name="version_id" unsigned="true" nullable="true" comment="Version ID"/>
+        <column xsi:type="int" name="customer_id" unsigned="true" nullable="true" comment="Customer ID"/>
+        <column xsi:type="varchar" name="customer_email" nullable="true" length="255" comment="Customer Email"/>
+        <column xsi:type="varchar" name="ip_address" nullable="true" length="45" comment="IP Address"/>
+        <column xsi:type="varchar" name="user_agent" nullable="true" length="500" comment="User Agent"/>
+        <column xsi:type="timestamp" name="downloaded_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Downloaded At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="log_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="PANTH_LOG_ATTACHMENT_ID_PANTH_ATTACHMENT_ATTACHMENT_ID"
+                    table="panth_product_attachment_download_log" column="attachment_id"
+                    referenceTable="panth_product_attachment" referenceColumn="attachment_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="PANTH_LOG_VERSION_ID_PANTH_VERSION_VERSION_ID"
+                    table="panth_product_attachment_download_log" column="version_id"
+                    referenceTable="panth_product_attachment_version" referenceColumn="version_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="PANTH_LOG_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID"
+                    table="panth_product_attachment_download_log" column="customer_id"
+                    referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_LOG_ATTACHMENT_ID" indexType="btree">
+            <column name="attachment_id"/>
+        </index>
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_LOG_CUSTOMER_ID" indexType="btree">
+            <column name="customer_id"/>
+        </index>
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_LOG_DOWNLOADED_AT" indexType="btree">
+            <column name="downloaded_at"/>
+        </index>
+    </table>
+
+    <!-- Store Relation Table -->
+    <table name="panth_product_attachment_store" resource="default" engine="innodb" comment="Attachment to Store Relation">
+        <column xsi:type="int" name="attachment_id" unsigned="true" nullable="false" comment="Attachment ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" comment="Store ID"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="attachment_id"/>
+            <column name="store_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="PANTH_ATTACHMENT_STORE_ATTACHMENT_ID_PANTH_ATTACHMENT_ATTACHMENT_ID"
+                    table="panth_product_attachment_store" column="attachment_id"
+                    referenceTable="panth_product_attachment" referenceColumn="attachment_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="PANTH_ATTACHMENT_STORE_STORE_ID_STORE_STORE_ID"
+                    table="panth_product_attachment_store" column="store_id"
+                    referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_STORE_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+    </table>
+
+    <!-- Product Relation Table -->
+    <table name="panth_product_attachment_product" resource="default" engine="innodb" comment="Attachment to Product Relation">
+        <column xsi:type="int" name="attachment_id" unsigned="true" nullable="false" comment="Attachment ID"/>
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="int" name="sort_order" unsigned="true" nullable="false" default="0" comment="Sort Order"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="attachment_id"/>
+            <column name="product_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="PANTH_ATTACHMENT_PRODUCT_ATTACHMENT_ID_PANTH_ATTACHMENT_ATTACHMENT_ID"
+                    table="panth_product_attachment_product" column="attachment_id"
+                    referenceTable="panth_product_attachment" referenceColumn="attachment_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="PANTH_ATTACHMENT_PRODUCT_PRODUCT_ID_CATALOG_PRODUCT_ENTITY_ENTITY_ID"
+                    table="panth_product_attachment_product" column="product_id"
+                    referenceTable="catalog_product_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_PRODUCT_PRODUCT_ID" indexType="btree">
+            <column name="product_id"/>
+        </index>
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_PRODUCT_SORT_ORDER" indexType="btree">
+            <column name="sort_order"/>
+        </index>
+    </table>
+
+    <!-- Category Relation Table -->
+    <table name="panth_product_attachment_category" resource="default" engine="innodb" comment="Attachment to Category Relation">
+        <column xsi:type="int" name="attachment_id" unsigned="true" nullable="false" comment="Attachment ID"/>
+        <column xsi:type="int" name="category_id" unsigned="true" nullable="false" comment="Category ID"/>
+        <column xsi:type="int" name="sort_order" unsigned="true" nullable="false" default="0" comment="Sort Order"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="attachment_id"/>
+            <column name="category_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="PANTH_ATTACHMENT_CATEGORY_ATTACHMENT_ID_PANTH_ATTACHMENT_ATTACHMENT_ID"
+                    table="panth_product_attachment_category" column="attachment_id"
+                    referenceTable="panth_product_attachment" referenceColumn="attachment_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="PANTH_ATTACHMENT_CATEGORY_CATEGORY_ID_CATALOG_CATEGORY_ENTITY_ENTITY_ID"
+                    table="panth_product_attachment_category" column="category_id"
+                    referenceTable="catalog_category_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_CATEGORY_CATEGORY_ID" indexType="btree">
+            <column name="category_id"/>
+        </index>
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_CATEGORY_SORT_ORDER" indexType="btree">
+            <column name="sort_order"/>
+        </index>
+    </table>
+
+    <!-- CMS Page Relation Table -->
+    <table name="panth_product_attachment_page" resource="default" engine="innodb" comment="Attachment to CMS Page Relation">
+        <column xsi:type="int" name="attachment_id" unsigned="true" nullable="false" comment="Attachment ID"/>
+        <column xsi:type="smallint" name="page_id" unsigned="false" nullable="false" comment="Page ID"/>
+        <column xsi:type="int" name="sort_order" unsigned="true" nullable="false" default="0" comment="Sort Order"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="attachment_id"/>
+            <column name="page_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="PANTH_ATTACHMENT_PAGE_ATTACHMENT_ID_PANTH_ATTACHMENT_ATTACHMENT_ID"
+                    table="panth_product_attachment_page" column="attachment_id"
+                    referenceTable="panth_product_attachment" referenceColumn="attachment_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="PANTH_ATTACHMENT_PAGE_PAGE_ID_CMS_PAGE_PAGE_ID"
+                    table="panth_product_attachment_page" column="page_id"
+                    referenceTable="cms_page" referenceColumn="page_id" onDelete="CASCADE"/>
+
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_PAGE_PAGE_ID" indexType="btree">
+            <column name="page_id"/>
+        </index>
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_PAGE_SORT_ORDER" indexType="btree">
+            <column name="sort_order"/>
+        </index>
+    </table>
+
+    <!-- Type Store Relation Table -->
+    <table name="panth_product_attachment_type_store" resource="default" engine="innodb" comment="Attachment Type to Store Relation">
+        <column xsi:type="int" name="type_id" unsigned="true" nullable="false" comment="Type ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" comment="Store ID"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="type_id"/>
+            <column name="store_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="PANTH_ATTACHMENT_TYPE_STORE_TYPE_ID_PANTH_ATTACHMENT_TYPE_TYPE_ID"
+                    table="panth_product_attachment_type_store" column="type_id"
+                    referenceTable="panth_product_attachment_type" referenceColumn="type_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="PANTH_ATTACHMENT_TYPE_STORE_STORE_ID_STORE_STORE_ID"
+                    table="panth_product_attachment_type_store" column="store_id"
+                    referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+
+        <index referenceId="PANTH_PRODUCT_ATTACHMENT_TYPE_STORE_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+    </table>
+</schema>

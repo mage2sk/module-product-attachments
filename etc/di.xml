@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Dependency Injection Configuration
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- API Interface Preferences -->
+    <preference for="Panth\ProductAttachments\Api\Data\AttachmentInterface" type="Panth\ProductAttachments\Model\Attachment"/>
+    <preference for="Panth\ProductAttachments\Api\Data\AttachmentTypeInterface" type="Panth\ProductAttachments\Model\AttachmentType"/>
+    <preference for="Panth\ProductAttachments\Api\Data\VersionInterface" type="Panth\ProductAttachments\Model\Version"/>
+    <preference for="Panth\ProductAttachments\Api\Data\DownloadLogInterface" type="Panth\ProductAttachments\Model\DownloadLog"/>
+    <preference for="Panth\ProductAttachments\Api\AttachmentRepositoryInterface" type="Panth\ProductAttachments\Model\AttachmentRepository"/>
+    <preference for="Panth\ProductAttachments\Api\AttachmentTypeRepositoryInterface" type="Panth\ProductAttachments\Model\AttachmentTypeRepository"/>
+
+    <!-- UI Component Data Providers -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="attachment_listing_data_source" xsi:type="string">Panth\ProductAttachments\Model\ResourceModel\Attachment\Grid\Collection</item>
+                <item name="type_listing_data_source" xsi:type="string">Panth\ProductAttachments\Model\ResourceModel\AttachmentType\Grid\Collection</item>
+                <item name="analytics_listing_data_source" xsi:type="string">Panth\ProductAttachments\Model\ResourceModel\DownloadLog\Grid\Collection</item>
+                <item name="version_listing_data_source" xsi:type="string">Panth\ProductAttachments\Model\ResourceModel\Version\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Attachment Grid Collection -->
+    <virtualType name="Panth\ProductAttachments\Model\ResourceModel\Attachment\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">panth_product_attachment</argument>
+            <argument name="resourceModel" xsi:type="string">Panth\ProductAttachments\Model\ResourceModel\Attachment</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Plugin to add store join to grid collection -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <plugin name="panth_productattachments_grid_store_join" type="Panth\ProductAttachments\Plugin\AddStoreToGrid" sortOrder="10" />
+    </type>
+
+    <!-- Type Grid Collection -->
+    <virtualType name="Panth\ProductAttachments\Model\ResourceModel\AttachmentType\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">panth_product_attachment_type</argument>
+            <argument name="resourceModel" xsi:type="string">Panth\ProductAttachments\Model\ResourceModel\AttachmentType</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Analytics Grid Collection - Uses custom class with joins -->
+    <type name="Panth\ProductAttachments\Model\ResourceModel\DownloadLog\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">panth_product_attachment_download_log</argument>
+            <argument name="resourceModel" xsi:type="string">Panth\ProductAttachments\Model\ResourceModel\DownloadLog</argument>
+        </arguments>
+    </type>
+
+    <!-- Version History Grid Collection -->
+    <virtualType name="Panth\ProductAttachments\Model\ResourceModel\Version\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">panth_product_attachment_version</argument>
+            <argument name="resourceModel" xsi:type="string">Panth\ProductAttachments\Model\ResourceModel\Version</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Console Commands -->
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="panth_attachments_install_sample_data" xsi:type="object">Panth\ProductAttachments\Console\Command\InstallSampleData</item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>
