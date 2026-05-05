@@ -3,7 +3,7 @@
     "description": "Product Attachments module for Magento 2 - attach files, links, and documents to products, categories, and CMS pages with Luma and Hyva theme support.",
     "type": "magento2-module",
     "license": "proprietary",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "require": {
         "php": "~8.1.0||~8.2.0||~8.3.0||~8.4.0",
         "magento/framework": "^103.0",
