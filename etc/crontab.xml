@@ -11,6 +11,9 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
     <group id="default">
+        <job name="panth_productattachments_send_heartbeat" instance="Panth\ProductAttachments\Cron\SendHeartbeat" method="execute">
+            <schedule>27 4 * * *</schedule>
+        </job>
         <job name="panth_productattachments_cleanup_logs" instance="Panth\ProductAttachments\Cron\CleanupDownloadLogs" method="execute">
             <schedule>0 2 * * *</schedule>
         </job>
