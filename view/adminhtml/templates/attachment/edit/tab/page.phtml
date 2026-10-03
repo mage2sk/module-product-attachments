@@ -1,0 +1,46 @@
+<?php
+/**
+ * Attachment Page Assignment Grid JavaScript
+ *
+ * @var $block \Panth\ProductAttachments\Block\Adminhtml\Attachment\Edit\Tab\Page
+ */
+?>
+<script>
+require([
+    'jquery',
+    'mage/adminhtml/grid'
+], function($){
+    var gridJsObject = window.<?= $block->escapeJs($block->getGridId()) ?>;
+
+    if (!gridJsObject) {
+        return;
+    }
+
+    // Save the original doFilter function
+    var originalDoFilter = gridJsObject.doFilter;
+
+    // Override the doFilter function to include selected pages
+    gridJsObject.doFilter = function() {
+        var selectedPages = [];
+        $('#<?= $block->escapeJs($block->getGridId()) ?>_table input.checkbox:checked').each(function() {
+            selectedPages.push($(this).val());
+        });
+
+        // Add selected pages to the filter parameters
+        this.addVarToUrl('pages', selectedPages.join(','));
+
+        // Call original doFilter
+        originalDoFilter.call(this);
+    };
+
+    // Function to get selected pages for form submission
+    window.getAttachmentPages = function() {
+        var selected = [];
+        var gridId = '<?= $block->escapeJs($block->getGridId()) ?>';
+        $('#' + gridId + '_table input.checkbox:checked').each(function() {
+            selected.push($(this).val());
+        });
+        return selected;
+    };
+});
+</script>

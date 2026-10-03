@@ -1,0 +1,21 @@
+<?php
+/**
+ * Custom CSS Template
+ *
+ * @var $block \Panth\ProductAttachments\Block\CustomCss
+ */
+
+if (!$block->isEnabled()) {
+    return;
+}
+
+$customCss = $block->getSanitizedCss();
+
+if (empty($customCss)) {
+    return;
+}
+?>
+<style type="text/css">
+/* Product Attachments - Custom CSS from Configuration */
+<?= /* @noEscape */ $customCss ?>
+</style>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Product View Layout
+ * Luma: Attachments rendered as a product tab in detailed_info group
+ * Hyva: Observer switches template + default_hyva.xml moves to product.info.main
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Luma: Add as a tab in product details (alongside Details, Reviews) -->
+        <referenceBlock name="product.info.details">
+            <block class="Panth\ProductAttachments\Block\Product\Attachments"
+                   name="product.attachments"
+                   template="Panth_ProductAttachments::attachment/renderer.phtml"
+                   group="detailed_info"
+                   before="-">
+                <arguments>
+                    <argument name="title" translate="true" xsi:type="string">Attachments &amp; Downloads</argument>
+                    <argument name="sort_order" xsi:type="number">1</argument>
+                </arguments>
+                <block class="Panth\ProductAttachments\Block\Product\Attachments"
+                       name="attachments.table"
+                       template="Panth_ProductAttachments::attachment/view-modes/table.phtml"/>
+                <block class="Panth\ProductAttachments\Block\Product\Attachments"
+                       name="attachments.list"
+                       template="Panth_ProductAttachments::attachment/view-modes/list.phtml"/>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

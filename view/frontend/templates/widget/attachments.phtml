@@ -1,0 +1,59 @@
+<?php
+/**
+ * Attachments Widget Template
+ *
+ * @var $block \Panth\ProductAttachments\Block\Widget\Attachments
+ */
+
+if (!$block->canShow()) {
+    return;
+}
+
+$viewMode = $block->getDisplayMode();
+$attachments = $block->getAttachments();
+$attachmentsArray = $attachments->getItems();
+
+// Calculate total items (links + files)
+$totalItems = 0;
+foreach ($attachmentsArray as $attachment) {
+    if ($block->hasLink($attachment)) {
+        $totalItems++;
+    }
+    if ($block->hasFiles($attachment)) {
+        $totalItems += $attachment->getFiles()->getSize();
+    }
+}
+?>
+
+<?php
+// Get context prefix for unique IDs
+$contextPrefix = $block->getContextPrefix();
+?>
+<div class="panth-product-attachment-module panth-attachment-wrapper widget-attachments-container"
+     id="panth-attachments-<?= $block->escapeHtmlAttr($contextPrefix) ?><?= $block->escapeHtmlAttr($viewMode) ?>"
+     data-view-mode="<?= $block->escapeHtmlAttr($viewMode) ?>">
+    <!-- Header Section -->
+    <?php if ($block->getTitle()): ?>
+    <div class="pa-header">
+        <h2 class="pa-title">
+            <i class="bi bi-paperclip"></i>
+            <?= $block->escapeHtml($block->getTitle()) ?>
+            <span class="pa-count">(<?= (int)$totalItems ?>)</span>
+        </h2>
+    </div>
+    <?php endif; ?>
+
+    <!-- Attachments Content -->
+    <div class="pa-content">
+        <?php
+        // Load the appropriate view mode template
+        $viewModeTemplate = 'Panth_ProductAttachments::attachment/view-modes/' . $viewMode . '.phtml';
+        echo $block->getLayout()
+            ->createBlock(\Panth\ProductAttachments\Block\Attachment\Renderer::class)
+            ->setTemplate($viewModeTemplate)
+            ->setData('attachments', $attachmentsArray)
+            ->setData('parent_block', $block)
+            ->toHtml();
+        ?>
+    </div>
+</div>

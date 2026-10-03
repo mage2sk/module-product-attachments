@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Version Listing UI Component
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">version_listing.version_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>version_columns</spinner>
+        <deps>
+            <dep>version_listing.version_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="version_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">version_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>Panth_ProductAttachments::attachment</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="version_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>version_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="version_columns">
+        <column name="version_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>desc</sorting>
+            </settings>
+        </column>
+        <column name="attachment_id" class="Panth\ProductAttachments\Ui\Component\Listing\Column\AttachmentLink">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Attachment ID</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+            </settings>
+        </column>
+        <column name="version_number">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Version</label>
+            </settings>
+        </column>
+        <column name="filename">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Filename</label>
+            </settings>
+        </column>
+        <column name="file_size" class="Panth\ProductAttachments\Ui\Component\Listing\Column\FileSize">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">File Size</label>
+            </settings>
+        </column>
+        <column name="changelog">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Changelog</label>
+            </settings>
+        </column>
+        <column name="is_current" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Current Version</label>
+            </settings>
+        </column>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Created</label>
+                <sorting>desc</sorting>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="Panth\ProductAttachments\Ui\Component\Listing\Column\VersionActions">
+            <settings>
+                <indexField>version_id</indexField>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

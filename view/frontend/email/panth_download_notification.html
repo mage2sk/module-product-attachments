@@ -1,0 +1,99 @@
+<!--
+/**
+ * Product Attachment Download Notification Email Template
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ *
+ * Available variables:
+ * - attachment_title
+ * - customer_name
+ * - customer_email
+ * - ip_address
+ * - store_name
+ * - download_time
+ */
+-->
+<!--@subject Product Attachment Downloaded - {{var attachment_title}} @-->
+<!--@vars
+{
+"var attachment_title":"Attachment Title",
+"var customer_name":"Customer Name",
+"var customer_email":"customer@example.com",
+"var ip_address":"192.168.1.1",
+"var store_name":"Store Name",
+"var download_time":"2025-01-01 12:00:00"
+}
+@-->
+
+{{template config_path="design/email/header_template"}}
+
+<table class="message-info">
+    <tr>
+        <td>
+            <h2 style="color: #3498db; margin-top: 0;">Product Attachment Download Notification</h2>
+            <p style="font-size: 14px; line-height: 1.6;">
+                A product attachment has been downloaded from your store.
+            </p>
+        </td>
+    </tr>
+</table>
+
+<table class="message-details" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+    <tr>
+        <td style="padding: 10px; background: #f9f9f9; border: 1px solid #ddd; font-weight: bold; width: 30%;">
+            Attachment:
+        </td>
+        <td style="padding: 10px; background: #fff; border: 1px solid #ddd;">
+            {{var attachment_title}}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 10px; background: #f9f9f9; border: 1px solid #ddd; font-weight: bold;">
+            Downloaded By:
+        </td>
+        <td style="padding: 10px; background: #fff; border: 1px solid #ddd;">
+            {{var customer_name}}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 10px; background: #f9f9f9; border: 1px solid #ddd; font-weight: bold;">
+            Customer Email:
+        </td>
+        <td style="padding: 10px; background: #fff; border: 1px solid #ddd;">
+            {{var customer_email}}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 10px; background: #f9f9f9; border: 1px solid #ddd; font-weight: bold;">
+            IP Address:
+        </td>
+        <td style="padding: 10px; background: #fff; border: 1px solid #ddd;">
+            {{var ip_address}}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 10px; background: #f9f9f9; border: 1px solid #ddd; font-weight: bold;">
+            Store:
+        </td>
+        <td style="padding: 10px; background: #fff; border: 1px solid #ddd;">
+            {{var store_name}}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 10px; background: #f9f9f9; border: 1px solid #ddd; font-weight: bold;">
+            Download Time:
+        </td>
+        <td style="padding: 10px; background: #fff; border: 1px solid #ddd;">
+            {{var download_time}}
+        </td>
+    </tr>
+</table>
+
+<p style="margin-top: 20px; font-size: 13px; color: #666;">
+    This is an automated notification from your Product Attachments module.
+</p>
+
+{{template config_path="design/email/footer_template"}}

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Category Page Layout
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Panth\ProductAttachments\Block\Category\Attachments"
+                   name="category.attachments"
+                   template="Panth_ProductAttachments::attachment/renderer.phtml"
+                   before="-">
+                <block class="Panth\ProductAttachments\Block\Category\Attachments"
+                       name="attachments.table"
+                       template="Panth_ProductAttachments::attachment/view-modes/table.phtml"/>
+                <block class="Panth\ProductAttachments\Block\Category\Attachments"
+                       name="attachments.list"
+                       template="Panth_ProductAttachments::attachment/view-modes/list.phtml"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

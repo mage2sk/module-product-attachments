@@ -1,0 +1,159 @@
+<?php
+/**
+ * Advanced Attachment Renderer Template
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+
+/** @var \Panth\ProductAttachments\Block\Attachment\Renderer $block */
+
+// Check if module is enabled
+if (!$block->isModuleEnabled()) {
+    return '';
+}
+
+// Get attachments collection
+$attachments = $block->getAttachments();
+if ($attachments->getSize() === 0) {
+    return '';
+}
+
+// Get view mode (table, list, grid, card, masonry)
+$viewMode = $block->getViewMode();
+$attachmentsArray = $attachments->getItems();
+
+// Calculate total items (links + files)
+$totalItems = 0;
+foreach ($attachmentsArray as $attachment) {
+    if ($block->hasLink($attachment)) {
+        $totalItems++; // Count the link
+    }
+    if ($block->hasFiles($attachment)) {
+        $totalItems += $attachment->getFiles()->getSize(); // Count all files
+    }
+}
+?>
+
+<?php
+// Get context prefix for unique IDs
+$contextPrefixMain = $block->getContextPrefix();
+?>
+<div class="panth-product-attachment-module panth-attachment-wrapper" id="panth-attachments-<?= $block->escapeHtmlAttr($contextPrefixMain) ?><?= $block->escapeHtmlAttr($viewMode) ?>" data-view-mode="<?= $block->escapeHtmlAttr($viewMode) ?>">
+    <!-- Header Section -->
+    <div class="pa-header">
+        <h2 class="pa-title">
+            <i class="fas fa-paperclip"></i>
+            <?= $block->escapeHtml(__('Attachments & Downloads')) ?>
+            <span class="pa-count">(<?= (int)$totalItems ?>)</span>
+        </h2>
+    </div>
+
+    <!-- Attachments Container -->
+    <div class="pa-content" id="pa-attachments-content">
+        <?= $block->getChildHtml('attachments.' . $viewMode) ?>
+
+        <!-- If no child template, load from view-modes directory -->
+        <?php if (!$block->getChildHtml('attachments.' . $viewMode)): ?>
+            <?php
+            $viewModeTemplate = 'Panth_ProductAttachments::attachment/view-modes/' . $viewMode . '.phtml';
+            echo $block->getLayout()
+                ->createBlock(\Panth\ProductAttachments\Block\Attachment\Renderer::class)
+                ->setTemplate($viewModeTemplate)
+                ->setData('attachments', $attachmentsArray)
+                ->setData('parent_block', $block)
+                ->toHtml();
+            ?>
+        <?php endif; ?>
+    </div>
+
+    <!-- No Results Message -->
+    <div class="pa-no-results" style="display:none;">
+        <i class="fas fa-search"></i>
+        <p><?= $block->escapeHtml(__('No attachments found matching your criteria.')) ?></p>
+        <button class="pa-reset-search"><?= $block->escapeHtml(__('Clear Search & Filters')) ?></button>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="pa-loading-overlay" style="display:none;">
+        <div class="pa-spinner"></div>
+        <p><?= $block->escapeHtml(__('Loading...')) ?></p>
+    </div>
+</div>
+
+<!-- Guest Login Modal (if guest downloads not allowed) -->
+<?php if (!$block->allowGuestDownloads() && !$block->isCustomerLoggedIn()): ?>
+<div id="pa-guest-login-modal" style="display:none;">
+    <div class="pa-guest-modal-content">
+        <button class="pa-modal-close"><i class="fas fa-times"></i></button>
+        <i class="fas fa-lock pa-lock-icon"></i>
+        <h3><?= $block->escapeHtml(__('Login Required')) ?></h3>
+        <p><?= $block->escapeHtml(__('Please login or create an account to download this attachment.')) ?></p>
+        <div class="pa-modal-actions">
+            <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>" class="pa-btn pa-btn-primary">
+                <i class="fas fa-sign-in-alt"></i>
+                <?= $block->escapeHtml(__('Login')) ?>
+            </a>
+            <a href="<?= $block->escapeUrl($block->getCreateAccountUrl()) ?>" class="pa-btn pa-btn-secondary">
+                <i class="fas fa-user-plus"></i>
+                <?= $block->escapeHtml(__('Create Account')) ?>
+            </a>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- Preview Modal Container (Magento Modal) -->
+<div id="pa-preview-modal-container" style="display:none;">
+    <div id="pa-preview-modal-content"></div>
+</div>
+
+<script>
+require(['jquery', 'domReady!'], function($) {
+    'use strict';
+
+    var attachmentModule = {
+        $wrapper: $('#panth-attachments'),
+        $content: $('#pa-attachments-content'),
+        currentView: '<?= $block->escapeJs($viewMode) ?>',
+
+        init: function() {
+            this.bindDownloadActions();
+            this.initAnimations();
+        },
+
+        bindDownloadActions: function() {
+            var self = this;
+
+            $(document).on('click', '.pa-download-btn', function(e) {
+                var isDownloadable = $(this).closest('.pa-attachment-item').data('downloadable');
+
+                if (!isDownloadable && !<?= $block->isCustomerLoggedIn() ? 'true' : 'false' ?>) {
+                    e.preventDefault();
+                    self.showGuestModal();
+                }
+            });
+        },
+
+        showGuestModal: function() {
+            $('#pa-guest-login-modal').fadeIn(300);
+
+            $('.pa-modal-close').on('click', function() {
+                $('#pa-guest-login-modal').fadeOut(300);
+            });
+        },
+
+        initAnimations: function() {
+            var $items = this.$content.find('.pa-attachment-item');
+            $items.each(function(index) {
+                $(this).css('animation-delay', (index * 0.05) + 's');
+            });
+        }
+    };
+
+    // Initialize
+    attachmentModule.init();
+});
+</script>

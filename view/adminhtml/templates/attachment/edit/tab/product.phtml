@@ -1,0 +1,46 @@
+<?php
+/**
+ * Attachment Product Assignment Grid JavaScript
+ *
+ * @var $block \Panth\ProductAttachments\Block\Adminhtml\Attachment\Edit\Tab\Product
+ */
+?>
+<script>
+require([
+    'jquery',
+    'mage/adminhtml/grid'
+], function($){
+    var gridJsObject = window.<?= $block->escapeJs($block->getGridId()) ?>;
+
+    if (!gridJsObject) {
+        return;
+    }
+
+    // Save the original doFilter function
+    var originalDoFilter = gridJsObject.doFilter;
+
+    // Override the doFilter function to include selected products
+    gridJsObject.doFilter = function() {
+        var selectedProducts = [];
+        $('#<?= $block->escapeJs($block->getGridId()) ?>_table input.checkbox:checked').each(function() {
+            selectedProducts.push($(this).val());
+        });
+
+        // Add selected products to the filter parameters
+        this.addVarToUrl('products', selectedProducts.join(','));
+
+        // Call original doFilter
+        originalDoFilter.call(this);
+    };
+
+    // Function to get selected products for form submission
+    window.getAttachmentProducts = function() {
+        var selected = [];
+        var gridId = '<?= $block->escapeJs($block->getGridId()) ?>';
+        $('#' + gridId + '_table input.checkbox:checked').each(function() {
+            selected.push($(this).val());
+        });
+        return selected;
+    };
+});
+</script>
