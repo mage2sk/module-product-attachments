@@ -1,0 +1,67 @@
+<?php
+/**
+ * @var $block \Magento\Backend\Block\Template
+ */
+$gridId = (string)$block->getGridId();
+$selectedIds = array_values(array_unique(array_map('intval', (array)$block->getSelectedIds())));
+?>
+<script>
+(function () {
+    var gridId = '<?= $block->escapeJs($gridId) ?>';
+    var store = window.panthAttachmentSelection = window.panthAttachmentSelection || {};
+
+    if (!store[gridId]) {
+        store[gridId] = {};
+        <?= /* @noEscape */ json_encode($selectedIds) ?>.forEach(function (id) {
+            store[gridId][String(id)] = true;
+        });
+    }
+
+    window['getAttachmentProducts'] = function () {
+        return Object.keys(store[gridId]);
+    };
+
+    if (window.panthAttachmentGridCheck) {
+        return;
+    }
+
+    var selectionFor = function (grid) {
+        var key = grid && grid.containerId ? String(grid.containerId) : '';
+        store[key] = store[key] || {};
+        return store[key];
+    };
+
+    var isRowCheckbox = function (element) {
+        return !!element && element.type === 'checkbox' && /^\d+$/.test(String(element.value || ''));
+    };
+
+    window.panthAttachmentGridCheck = function (grid, element, checked) {
+        if (!isRowCheckbox(element)) {
+            return;
+        }
+        if (checked) {
+            selectionFor(grid)[String(element.value)] = true;
+        } else {
+            delete selectionFor(grid)[String(element.value)];
+        }
+    };
+
+    window.panthAttachmentGridRowInit = function (grid, row) {
+        var checkbox = row.querySelector('input.checkbox, input[type=checkbox]');
+        if (isRowCheckbox(checkbox)) {
+            checkbox.checked = !!selectionFor(grid)[String(checkbox.value)];
+        }
+    };
+
+    window.panthAttachmentGridRowClick = function (grid, event) {
+        var target = event.target || event.srcElement;
+        var row = target && target.closest ? target.closest('tr') : null;
+        var checkbox = row ? row.querySelector('input.checkbox, input[type=checkbox]') : null;
+        if (!isRowCheckbox(checkbox)) {
+            return;
+        }
+        var checked = target === checkbox ? checkbox.checked : !checkbox.checked;
+        grid.setCheckboxChecked(checkbox, checked);
+    };
+})();
+</script>

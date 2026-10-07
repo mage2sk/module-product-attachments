@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Panth_ProductAttachments::group"
+             title="Product Attachments"
+             module="Panth_ProductAttachments"
+             sortOrder="50"
+             parent="Panth_Core::panth_extensions"
+             resource="Panth_ProductAttachments::attachment"/>
+        <add id="Panth_ProductAttachments::attachment"
+             title="Manage Attachments"
+             module="Panth_ProductAttachments"
+             sortOrder="10"
+             parent="Panth_ProductAttachments::group"
+             action="productattachments/attachment/index"
+             resource="Panth_ProductAttachments::attachment"/>
+        <add id="Panth_ProductAttachments::type"
+             title="Attachment Types"
+             module="Panth_ProductAttachments"
+             sortOrder="20"
+             parent="Panth_ProductAttachments::group"
+             action="productattachments/type/index"
+             resource="Panth_ProductAttachments::type"/>
+        <add id="Panth_ProductAttachments::unusedfiles"
+             title="Unused Files"
+             module="Panth_ProductAttachments"
+             sortOrder="30"
+             parent="Panth_ProductAttachments::group"
+             action="productattachments/unusedfiles/index"
+             resource="Panth_ProductAttachments::unusedfiles"/>
+        <add id="Panth_ProductAttachments::analytics"
+             title="Download Analytics"
+             module="Panth_ProductAttachments"
+             sortOrder="40"
+             parent="Panth_ProductAttachments::group"
+             action="productattachments/analytics/index"
+             resource="Panth_ProductAttachments::analytics"/>
+        <add id="Panth_ProductAttachments::config"
+             title="Configuration"
+             module="Panth_ProductAttachments"
+             sortOrder="99"
+             parent="Panth_ProductAttachments::group"
+             action="adminhtml/system_config/edit/section/panth_productattachments"
+             resource="Panth_ProductAttachments::config"/>
+    </menu>
+</config>

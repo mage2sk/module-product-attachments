@@ -1,0 +1,202 @@
+{
+    "panth_product_attachment": {
+        "column": {
+            "attachment_id": true,
+            "title": true,
+            "description": true,
+            "attachment_type_id": true,
+            "access_level": true,
+            "is_active": true,
+            "expires_at": true,
+            "sort_order": true,
+            "download_count": true,
+            "created_at": true,
+            "updated_at": true,
+            "customer_group_ids": true,
+            "is_link": true,
+            "link_url": true,
+            "link_target": true
+        },
+        "index": {
+            "PANTH_PRODUCT_ATTACHMENT_IS_ACTIVE": true,
+            "PANTH_PRODUCT_ATTACHMENT_ATTACHMENT_TYPE_ID": true,
+            "PANTH_PRODUCT_ATTACHMENT_EXPIRES_AT": true,
+            "PANTH_PRODUCT_ATTACHMENT_SORT_ORDER": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_1C303B217C09897B0802BF80852489D7": true
+        }
+    },
+    "panth_product_attachment_file": {
+        "column": {
+            "file_id": true,
+            "attachment_id": true,
+            "filename": true,
+            "original_filename": true,
+            "file_path": true,
+            "file_size": true,
+            "mime_type": true,
+            "file_extension": true,
+            "file_icon": true,
+            "is_primary": true,
+            "sort_order": true,
+            "download_count": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "PANTH_PRODUCT_ATTACHMENT_FILE_ATTACHMENT_ID": true,
+            "PANTH_PRODUCT_ATTACHMENT_FILE_IS_PRIMARY": true,
+            "PANTH_PRODUCT_ATTACHMENT_FILE_SORT_ORDER": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_6414625D03924E01C39C4B95532163E9": true,
+            "PANTH_PRODUCT_ATTACHMENT_FILE_FILE_PATH": true
+        }
+    },
+    "panth_product_attachment_type": {
+        "column": {
+            "type_id": true,
+            "name": true,
+            "code": true,
+            "icon_class": true,
+            "is_active": true,
+            "sort_order": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "PANTH_PRODUCT_ATTACHMENT_TYPE_IS_ACTIVE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "PANTH_PRODUCT_ATTACHMENT_TYPE_CODE": true
+        }
+    },
+    "panth_product_attachment_version": {
+        "column": {
+            "version_id": true,
+            "attachment_id": true,
+            "version_number": true,
+            "filename": true,
+            "file_path": true,
+            "file_size": true,
+            "mime_type": true,
+            "is_current": true,
+            "changelog": true,
+            "uploaded_by": true,
+            "download_count": true,
+            "created_at": true
+        },
+        "index": {
+            "PANTH_PRODUCT_ATTACHMENT_VERSION_ATTACHMENT_ID": true,
+            "PANTH_PRODUCT_ATTACHMENT_VERSION_IS_CURRENT": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_B519198CCCCDE63C306BBD4E96442869": true,
+            "PANTH_PRODUCT_ATTACHMENT_VERSION_ATTACHMENT_ID_VERSION_NUMBER": true
+        }
+    },
+    "panth_product_attachment_download_log": {
+        "column": {
+            "log_id": true,
+            "attachment_id": true,
+            "version_id": true,
+            "customer_id": true,
+            "customer_email": true,
+            "ip_address": true,
+            "user_agent": true,
+            "downloaded_at": true
+        },
+        "index": {
+            "PANTH_PRODUCT_ATTACHMENT_DOWNLOAD_LOG_ATTACHMENT_ID": true,
+            "PANTH_PRODUCT_ATTACHMENT_DOWNLOAD_LOG_CUSTOMER_ID": true,
+            "PANTH_PRODUCT_ATTACHMENT_DOWNLOAD_LOG_DOWNLOADED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_C1EEDD2C010472776CE2CF71C43CEDE9": true,
+            "FK_DE10D9B9187787BC4698C88BE5D70836": true,
+            "PANTH_PRD_ATTACHMENT_DOWNLOAD_LOG_CSTR_ID_CSTR_ENTT_ENTT_ID": true
+        }
+    },
+    "panth_product_attachment_store": {
+        "column": {
+            "attachment_id": true,
+            "store_id": true
+        },
+        "index": {
+            "PANTH_PRODUCT_ATTACHMENT_STORE_STORE_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_D7633E3C147D849A23DF6475BF85D916": true,
+            "PANTH_PRODUCT_ATTACHMENT_STORE_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "panth_product_attachment_product": {
+        "column": {
+            "attachment_id": true,
+            "product_id": true,
+            "sort_order": true
+        },
+        "index": {
+            "PANTH_PRODUCT_ATTACHMENT_PRODUCT_PRODUCT_ID": true,
+            "PANTH_PRODUCT_ATTACHMENT_PRODUCT_SORT_ORDER": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_5C4F0E4730D14D480EF321BE9CD47D3B": true,
+            "PANTH_PRD_ATTACHMENT_PRD_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true
+        }
+    },
+    "panth_product_attachment_category": {
+        "column": {
+            "attachment_id": true,
+            "category_id": true,
+            "sort_order": true
+        },
+        "index": {
+            "PANTH_PRODUCT_ATTACHMENT_CATEGORY_CATEGORY_ID": true,
+            "PANTH_PRODUCT_ATTACHMENT_CATEGORY_SORT_ORDER": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_9FD944F2F6287FC2464FF7294F6C47D6": true,
+            "PANTH_PRD_ATTACHMENT_CTGR_CTGR_ID_CAT_CTGR_ENTT_ENTT_ID": true
+        }
+    },
+    "panth_product_attachment_page": {
+        "column": {
+            "attachment_id": true,
+            "page_id": true,
+            "sort_order": true
+        },
+        "index": {
+            "PANTH_PRODUCT_ATTACHMENT_PAGE_PAGE_ID": true,
+            "PANTH_PRODUCT_ATTACHMENT_PAGE_SORT_ORDER": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_F8088380AD12BA9AAEB7F5C40B7F81D2": true,
+            "PANTH_PRODUCT_ATTACHMENT_PAGE_PAGE_ID_CMS_PAGE_PAGE_ID": true
+        }
+    },
+    "panth_product_attachment_type_store": {
+        "column": {
+            "type_id": true,
+            "store_id": true
+        },
+        "index": {
+            "PANTH_PRODUCT_ATTACHMENT_TYPE_STORE_STORE_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_40BC1316EE403DA2E1C24A9DF79EA299": true,
+            "PANTH_PRODUCT_ATTACHMENT_TYPE_STORE_STORE_ID_STORE_STORE_ID": true
+        }
+    }
+}

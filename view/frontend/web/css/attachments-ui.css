@@ -1,0 +1,283 @@
+html body .panth-product-attachment-module {
+    --pa-primary: var(--color-primary, #0D9488);
+    --pa-primary-fill: var(--color-primary-fill, #0F766E);
+    --pa-text: var(--color-fg, #171717);
+    --pa-text-secondary: var(--color-fg-secondary, #525252);
+    --pa-text-muted: #525252;
+    --pa-border: #E5E5E5;
+    max-width: 100%;
+    min-width: 0;
+    font-family: inherit;
+}
+
+html body .panth-product-attachment-module .pa-header {
+    border-radius: 12px !important;
+    background: var(--pa-primary-fill) !important;
+    color: #FFFFFF !important;
+}
+
+html body .panth-product-attachment-module .pa-header .pa-title,
+html body .panth-product-attachment-module .pa-header .pa-count {
+    color: #FFFFFF !important;
+}
+
+html body .panth-product-attachment-module .list-group {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)) !important;
+    gap: 12px !important;
+    min-width: 0;
+}
+
+html body .panth-product-attachment-module .list-group > .list-group-item {
+    min-width: 0 !important;
+    max-width: 100%;
+    box-sizing: border-box;
+    border-radius: 12px !important;
+    border: 1px solid var(--pa-border) !important;
+}
+
+html body .panth-product-attachment-module .list-group-item .flex-grow-1 {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+}
+
+html body .panth-product-attachment-module .list-group-item strong,
+html body .panth-product-attachment-module .table tbody strong {
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+    color: var(--pa-text) !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+}
+
+html body .panth-product-attachment-module .pa-description,
+html body .panth-product-attachment-module .pa-description * {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    color: var(--pa-text-secondary) !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+html body .panth-product-attachment-module .pa-description {
+    margin-bottom: 6px !important;
+}
+
+html body .panth-product-attachment-module .text-muted {
+    color: var(--pa-text-secondary) !important;
+}
+
+html body .panth-product-attachment-module .pa-filename,
+html body .panth-product-attachment-module .list-group-item small,
+html body .panth-product-attachment-module .table small,
+html body .panth-product-attachment-module .table tbody td small {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    color: var(--pa-text-secondary) !important;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+html body .panth-product-attachment-module .badge,
+html body .panth-product-attachment-module .list-group-item .badge {
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+    font-weight: 600 !important;
+    padding: 3px 8px !important;
+    border-radius: 9999px !important;
+    letter-spacing: 0.02em !important;
+    box-shadow: none !important;
+    text-transform: uppercase;
+}
+
+html body .panth-product-attachment-module .badge.bg-secondary {
+    background: #FAFAFA !important;
+    color: var(--pa-text-secondary) !important;
+    border: 1px solid #E5E5E5;
+}
+
+html body .panth-product-attachment-module .badge.bg-info,
+html body .panth-product-attachment-module .badge.bg-primary {
+    background: #F0FDFA !important;
+    color: var(--pa-primary-fill) !important;
+    border: 1px solid #E5E5E5;
+}
+
+html body .panth-product-attachment-module .pa-list-icon {
+    background: var(--pa-primary-fill) !important;
+    color: #FFFFFF !important;
+    box-shadow: none !important;
+}
+
+html body .panth-product-attachment-module .pa-attachment-icon {
+    color: var(--pa-primary-fill) !important;
+}
+
+html body .panth-product-attachment-module .btn,
+html body .panth-product-attachment-module .btn-sm,
+html body .panth-product-attachment-module a.btn-sm {
+    box-sizing: border-box !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 8px 10px !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    transform: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-family: inherit !important;
+}
+
+html body .panth-product-attachment-module .btn-primary,
+html body .panth-product-attachment-module .btn-info {
+    background: var(--pa-primary-fill) !important;
+    border: 1px solid var(--pa-primary-fill) !important;
+    color: #FFFFFF !important;
+}
+
+html body .panth-product-attachment-module .btn-primary:hover,
+html body .panth-product-attachment-module .btn-info:hover {
+    background: #115E59 !important;
+    border-color: #115E59 !important;
+    color: #FFFFFF !important;
+}
+
+html body .panth-product-attachment-module .btn-info {
+    background: #FFFFFF !important;
+    color: var(--pa-primary-fill) !important;
+}
+
+html body .panth-product-attachment-module .btn-info:hover {
+    background: #F0FDFA !important;
+    color: #115E59 !important;
+}
+
+html body .panth-product-attachment-module .btn-warning,
+html body .panth-product-attachment-module .pa-login-btn {
+    background: #FFFFFF !important;
+    border: 1px solid var(--pa-primary-fill) !important;
+    color: var(--pa-primary-fill) !important;
+}
+
+html body .panth-product-attachment-module .btn-warning:hover,
+html body .panth-product-attachment-module .pa-login-btn:hover {
+    background: #F0FDFA !important;
+    color: #115E59 !important;
+}
+
+html body .panth-product-attachment-module .btn:focus-visible {
+    outline: 2px solid var(--pa-primary) !important;
+    outline-offset: 2px !important;
+}
+
+html body .panth-product-attachment-module .table-responsive {
+    max-width: 100%;
+}
+
+@media (max-width: 1023px) {
+    html body .panth-product-attachment-module .btn,
+    html body .panth-product-attachment-module .btn-sm,
+    html body .panth-product-attachment-module a.btn-sm {
+        min-width: 44px !important;
+        min-height: 44px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    html body .panth-product-attachment-module .table {
+        font-size: 14px !important;
+    }
+
+    html body .panth-product-attachment-module .table tbody tr {
+        border-radius: 12px !important;
+        padding: 12px !important;
+    }
+
+    html body .panth-product-attachment-module .table tbody td {
+        min-width: 0;
+        gap: 12px;
+    }
+
+    html body .panth-product-attachment-module .table tbody td:first-child {
+        display: block !important;
+        border-bottom: 0 !important;
+        padding: 0 0 4px !important;
+        text-align: left !important;
+    }
+
+    html body .panth-product-attachment-module .table tbody td:first-child:before,
+    html body .panth-product-attachment-module .table tbody td[data-label="Name"]:before {
+        display: none !important;
+    }
+
+    html body .panth-product-attachment-module .table tbody td[data-label="Name"] {
+        display: block !important;
+        padding: 0 0 8px !important;
+    }
+
+    html body .panth-product-attachment-module .table tbody td[data-label="Name"] > * {
+        display: block;
+        max-width: 100%;
+    }
+
+    html body .panth-product-attachment-module .table tbody td:before {
+        font-size: 13px !important;
+        color: var(--pa-text-secondary) !important;
+    }
+
+    html body .panth-product-attachment-module .table tbody td:last-child {
+        justify-content: flex-start !important;
+    }
+}
+
+@media (max-width: 576px) {
+    html body .panth-product-attachment-module .list-group > .list-group-item {
+        display: grid !important;
+        grid-template-columns: auto minmax(0, 1fr);
+        column-gap: 12px !important;
+        row-gap: 8px !important;
+        align-items: start !important;
+        padding: 12px !important;
+    }
+
+    html body .panth-product-attachment-module .list-group > .list-group-item > :last-child {
+        grid-column: 2;
+        justify-self: start;
+    }
+
+    html body .panth-product-attachment-module .pa-list-icon {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 18px !important;
+    }
+
+    html body .panth-product-attachment-module .list-group-item strong,
+    html body .panth-product-attachment-module .table tbody strong {
+        font-size: 15px !important;
+    }
+}
+
+.panth-attachment-wrapper .pa-reset-search {
+    background: #FFFFFF;
+    border: 1px solid #D4D4D4;
+    border-radius: 8px;
+    color: #525252;
+    min-height: 44px;
+    padding: 0 16px;
+}
+
+.panth-attachment-wrapper .pa-reset-search:hover,
+.panth-attachment-wrapper .pa-reset-search:focus-visible {
+    background: #F0FDFA;
+    border-color: #0F766E;
+    color: #0F766E;
+}

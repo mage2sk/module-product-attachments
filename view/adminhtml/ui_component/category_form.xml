@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Category Form UI Component
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="category_attachments" sortOrder="900">
+        <settings>
+            <label translate="true">Category Attachments</label>
+            <collapsible>true</collapsible>
+            <opened>false</opened>
+        </settings>
+        <container name="attachments_container">
+            <htmlContent name="html_content">
+                <block class="Panth\ProductAttachments\Block\Adminhtml\Category\Edit\Tab\AttachmentList" name="category.attachment.list"/>
+            </htmlContent>
+        </container>
+    </fieldset>
+</form>

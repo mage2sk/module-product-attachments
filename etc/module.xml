@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Module Declaration
+ *
+ * @category  Panth
+ * @package   Panth_ProductAttachments
+ * @author    Panth
+ * @copyright Copyright (c) 2025 Panth
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Panth_ProductAttachments">
+        <sequence>
+            <module name="Magento_Catalog"/>
+            <module name="Magento_Customer"/>
+            <module name="Magento_Sales"/>
+            <module name="Magento_Cms"/>
+            <module name="Magento_Store"/>
+            <module name="Magento_Widget"/>
+            <module name="Panth_Core"/>
+        </sequence>
+    </module>
+</config>

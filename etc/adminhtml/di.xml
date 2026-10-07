@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="Panth\ProductAttachments\Ui\AttachmentKeywordFilter" type="Panth\ProductAttachments\Ui\Component\DataProvider\KeywordFilter">
+        <arguments>
+            <argument name="columns" xsi:type="array">
+                <item name="title" xsi:type="string">title</item>
+                <item name="description" xsi:type="string">description</item>
+                <item name="link_url" xsi:type="string">link_url</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Panth\ProductAttachments\Ui\TypeKeywordFilter" type="Panth\ProductAttachments\Ui\Component\DataProvider\KeywordFilter">
+        <arguments>
+            <argument name="columns" xsi:type="array">
+                <item name="name" xsi:type="string">name</item>
+                <item name="code" xsi:type="string">code</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Panth\ProductAttachments\Ui\AttachmentFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Panth\ProductAttachments\Ui\AttachmentKeywordFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Panth\ProductAttachments\Ui\TypeFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Panth\ProductAttachments\Ui\TypeKeywordFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Panth\ProductAttachments\Ui\AttachmentReporting" type="Magento\Framework\View\Element\UiComponent\DataProvider\Reporting">
+        <arguments>
+            <argument name="filterPool" xsi:type="object">Panth\ProductAttachments\Ui\AttachmentFilterPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Panth\ProductAttachments\Ui\TypeReporting" type="Magento\Framework\View\Element\UiComponent\DataProvider\Reporting">
+        <arguments>
+            <argument name="filterPool" xsi:type="object">Panth\ProductAttachments\Ui\TypeFilterPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Panth\ProductAttachments\Ui\AttachmentGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="reporting" xsi:type="object">Panth\ProductAttachments\Ui\AttachmentReporting</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Panth\ProductAttachments\Ui\TypeGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="reporting" xsi:type="object">Panth\ProductAttachments\Ui\TypeReporting</argument>
+        </arguments>
+    </virtualType>
+</config>
