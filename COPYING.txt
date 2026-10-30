@@ -1,12 +1,6 @@
-Panth Commercial License
+Magento 2 Product Attachments
 
-Copyright (c) 2026 Kishan Savaliya. All rights reserved.
+Copyright (c) 2026 Kishan Savaliya (Panth Infotech)
 
-Use of this software is governed by the LICENSE.txt file distributed
-with the source code. Panth_ProductAttachments is a paid extension
-available on the Adobe Commerce Marketplace.
-
-For all licensing, support, and general questions, please contact:
-    Email:    kishansavaliyakb@gmail.com
-    Website:  https://kishansavaliya.com
-    Company:  Panth Infotech
+Magento 2 Product Attachments is free and open-source software released under the MIT License.
+See LICENSE.txt for the full license text.
